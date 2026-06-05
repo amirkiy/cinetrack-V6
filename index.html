@@ -1,259 +1,209 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="fa" dir="rtl" id="html-root">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CineTrack AI Ultimate Pro</title>
   <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <style>
+    /* ===================== MODERN DARK THEME ===================== */
     :root {
-      --bg-main: #f4f6f8;
-      --bg-surface: #ffffff;
-      --bg-card: #ffffff;
-      --bg-glass: rgba(255,255,255,0.85);
-      --accent: #2563eb;
-      --accent-hover: #1d4ed8;
-      --text-main: #1f2937;
-      --text-muted: #6b7280;
-      --border: rgba(0,0,0,0.08);
-      --shadow: 0 10px 30px rgba(0,0,0,0.08);
+      --bg-main: #0a0a0a;
+      --bg-surface: #141414;
+      --bg-card: #1e1e1e;
+      --bg-hover: #2a2a2a;
+      --accent: #e50914;
+      --accent-hover: #b81d24;
+      --text-main: #ffffff;
+      --text-secondary: #e0e0e0;
+      --text-muted: #9ca3af;
+      --border: #333333;
+      --shadow: 0 8px 30px rgba(0,0,0,0.5);
       --cyan: #00bcd4;
       --green: #2e7d32;
-      --blue: #1a237e;
+      --gold: #ffc107;
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Vazirmatn', sans-serif; transition: all 0.25s ease; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Vazirmatn', sans-serif; transition: all 0.2s ease-in-out; }
 
     body { background-color: var(--bg-main); color: var(--text-main); overflow-x: hidden; padding-bottom: 60px; }
 
+    /* ===================== HEADER ===================== */
     header {
-      background: var(--bg-surface); border-bottom: 1px solid var(--border);
+      background: rgba(20, 20, 20, 0.85);
+      border-bottom: 1px solid var(--border);
       padding: 15px 30px; display: flex; justify-content: space-between;
       align-items: center; position: sticky; top: 0; z-index: 100;
-      backdrop-filter: blur(10px); flex-wrap: wrap; gap: 15px;
+      backdrop-filter: blur(12px); flex-wrap: wrap; gap: 15px;
     }
 
-    .brand { font-size: 24px; font-weight: 900; color: var(--accent); letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
+    .brand { font-size: 22px; font-weight: 900; color: #fff; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
+    .brand-accent { color: var(--accent); }
+    .brand-badge { font-size: 10px; background: var(--accent); color: #fff; padding: 3px 6px; border-radius: 4px; font-weight: 800;}
 
-    .search-container { position: relative; width: 35%; max-width: 500px; min-width: 250px; }
-
-    .search-wrapper { display: flex; align-items: center; background: #222; border: 1px solid var(--border); border-radius: 30px; padding: 2px 15px; }
-    .search-wrapper input { flex: 1; background: transparent; border: none; color: #fff; padding: 10px; font-size: 15px; outline: none; }
+    /* ===================== SEARCH ===================== */
+    .search-container { position: relative; width: 40%; max-width: 600px; min-width: 250px; }
+    .search-wrapper { display: flex; align-items: center; background: var(--bg-card); border: 1px solid var(--border); border-radius: 30px; padding: 4px 15px; }
+    .search-wrapper input { flex: 1; background: transparent; border: none; color: #fff; padding: 8px; font-size: 14px; outline: none; }
+    .search-wrapper input::placeholder { color: var(--text-muted); }
     .search-wrapper button { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px; }
-
-    .search-dropdown { position: absolute; top: 105%; left: 0; right: 0; background: #1c1c1c; border: 1px solid var(--border); border-radius: 12px; max-height: 400px; overflow-y: auto; z-index: 200; box-shadow: var(--shadow); display: none; }
-
-    .search-item { display: flex; gap: 15px; padding: 10px; border-bottom: 1px solid var(--border); cursor: pointer; align-items: center; }
-    .search-item:hover { background: #282828; }
-    .search-item img { width: 45px; height: 65px; object-fit: cover; border-radius: 4px; background: #333; }
-    .search-item .info h4 { font-size: 14px; margin-bottom: 4px; }
-    .search-item .info p { font-size: 12px; color: var(--text-muted); }
-
-    .nav-actions { display: flex; gap: 12px; flex-wrap: wrap; }
-
-    .btn { background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; }
-    .btn:hover { background: var(--accent-hover); }
-    .btn-secondary { background: #2a2a2a; border: 1px solid var(--border); }
-    .btn-secondary:hover { background: #3a3a3a; }
-    .btn-delete { background: #551111; }
-    .btn-delete:hover { background: #881111; }
-    .btn-stream { background: #1b5e20 !important; }
-    .btn-stream:hover { background: #2e7d32 !important; }
-    .btn-stream-next { background: #0d47a1 !important; }
-    .btn-stream-next:hover { background: #1565c0 !important; }
-
-    .hero-section { margin: 30px; background: linear-gradient(135deg, #1c1c1c 0%, #111 100%); border-radius: 20px; padding: 30px; border: 1px solid var(--border); position: relative; min-height: 350px; display: flex; align-items: center; box-shadow: var(--shadow); }
-
-    .hero-empty { text-align: center; width: 100%; color: var(--text-muted); font-size: 18px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-
-    .hero-content { display: flex; gap: 40px; width: 100%; align-items: flex-start; }
-
-    .hero-poster { width: 200px; height: 300px; object-fit: cover; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.8); border: 1px solid var(--border); }
-
-    .hero-details { flex: 1; min-width: 0; }
-
-    .hero-title { font-size: 32px; font-weight: 900; margin-bottom: 10px; color: #fff; }
-
-    .hero-meta { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; font-size: 14px; color: var(--text-muted); }
-
-    .badge { background: rgba(255, 255, 255, 0.1); padding: 3px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; color: #fff; }
-    .badge-status { background: var(--accent); }
-
-    .hero-extended-info { background: rgba(255,255,255,0.03); padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); }
-    .extended-row { font-size: 14px; margin-bottom: 8px; line-height: 1.6; }
-    .extended-row strong { color: var(--cyan); }
-
-    /* اصلاح ساختار نمایش پیوندهای آرشیو جهت جلوگیری از کشیدگی نامحدود و اسکرول افقی */
-    .archive-links-box {
-      max-width: 100%;
-      max-height: 250px;
-      overflow-y: auto;
-      overflow-x: hidden;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      padding: 10px;
-      background: rgba(0, 0, 0, 0.3);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      margin-top: 5px;
-    }
-    .archive-link-btn {
-      display: inline-block;
-      background: var(--green);
-      color: #fff;
-      padding: 6px 14px;
-      border-radius: 6px;
-      text-decoration: none;
-      font-size: 12px;
-      font-weight: 500;
-      max-width: 100%;
-      white-space: normal;
-      word-break: break-all;
-    }
-    .archive-link-btn:hover { background: #388e3c; }
-
-    /* استایل اختصاصی بخش مینی هوش مصنوعی فیلم‌های مشابه */
-    .movie-mini-ai-box {
-      background: rgba(0, 188, 212, 0.05);
-      border: 1px solid rgba(0, 188, 212, 0.2);
-      border-radius: 12px;
-      padding: 15px;
-      margin-top: 20px;
-    }
-    .mini-ai-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-    .mini-ai-result-content {
-      font-size: 13px;
-      line-height: 1.8;
-      color: #ddd;
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-
-    .hero-plot { font-size: 15px; line-height: 1.8; color: #ddd; margin-bottom: 25px; max-width: 800px; }
-
-    .episode-progress-block { background: rgba(0, 188, 212, 0.07); border: 1px solid rgba(0, 188, 212, 0.25); border-radius: 12px; padding: 14px 18px; margin-bottom: 15px; }
-    .episode-progress-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
-    .episode-progress-title { font-size: 15px; font-weight: 800; color: var(--cyan); }
-    .episode-progress-count { font-size: 13px; color: var(--text-muted); }
-
-    .audio-review-block { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-top: 20px; }
     
-    .stars-rating { display: flex; gap: 4px; font-size: 24px; cursor: pointer; color: #444; user-select: none; }
-    .stars-rating span.active { color: #ffc107; text-shadow: 0 0 8px rgba(255,193,7,0.5); }
+    .search-dropdown { position: absolute; top: 110%; left: 0; right: 0; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); max-height: 400px; overflow-y: auto; z-index: 200; box-shadow: var(--shadow); display: none; }
+    .search-item { display: flex; gap: 15px; padding: 12px; border-bottom: 1px solid var(--border); cursor: pointer; align-items: center; }
+    .search-item:hover { background: var(--bg-hover); }
+    .search-item img { width: 40px; height: 60px; object-fit: cover; border-radius: 4px; background: #333; }
+    .search-item h4 { font-size: 14px; margin-bottom: 4px; color: var(--text-main); }
+    .search-item p { font-size: 12px; color: var(--text-muted); }
 
-    .dashboard-stats { margin: 0 30px 30px 30px; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
+    /* ===================== BUTTONS ===================== */
+    .nav-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn { background: var(--accent); color: white; border: none; padding: 10px 18px; border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; }
+    .btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
+    .btn-secondary { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-secondary); }
+    .btn-secondary:hover { background: var(--bg-hover); border-color: #555; }
+    .btn-success { background: var(--green); }
+    .btn-success:hover { background: #388e3c; }
+    .btn-danger { background: rgba(229, 9, 20, 0.1); color: var(--accent); border: 1px solid rgba(229, 9, 20, 0.3); }
+    .btn-danger:hover { background: var(--accent); color: #fff; }
 
-    .stat-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px; padding: 15px; text-align: center; box-shadow: var(--shadow); }
-    .stat-card h3 { font-size: 20px; font-weight: 800; color: var(--accent); margin-bottom: 5px; }
-    .stat-card p { font-size: 12px; color: var(--text-muted); }
+    /* ===================== HERO SECTION ===================== */
+    .hero-section { margin: 30px; background: var(--bg-surface); border-radius: var(--radius-lg); padding: 30px; border: 1px solid var(--border); position: relative; min-height: 350px; display: flex; align-items: center; box-shadow: var(--shadow); }
+    .hero-empty { text-align: center; width: 100%; color: var(--text-muted); font-size: 16px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+    .hero-content { display: flex; gap: 40px; width: 100%; align-items: flex-start; }
+    .hero-poster { width: 220px; height: 330px; object-fit: cover; border-radius: var(--radius-md); box-shadow: 0 10px 25px rgba(0,0,0,0.8); border: 1px solid var(--border); }
+    .hero-details { flex: 1; min-width: 0; }
+    .hero-title { font-size: 36px; font-weight: 900; margin-bottom: 15px; color: #fff; line-height: 1.2; }
+    .hero-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; font-size: 13px; color: var(--text-secondary); align-items: center; }
+    
+    .badge { background: var(--bg-hover); padding: 4px 10px; border-radius: 4px; font-weight: 600; color: var(--text-secondary); border: 1px solid var(--border); }
+    .badge-accent { background: rgba(229, 9, 20, 0.1); color: var(--accent); border-color: rgba(229, 9, 20, 0.3); }
+    .badge-quality { background: rgba(0, 188, 212, 0.1); color: var(--cyan); border-color: rgba(0, 188, 212, 0.3); }
+    .badge-imdb { background: rgba(255, 193, 7, 0.1); color: var(--gold); border-color: rgba(255, 193, 7, 0.3); }
 
-    .section-title { margin: 20px 30px 10px 30px; font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+    .hero-extended-info { background: var(--bg-card); padding: 20px; border-radius: var(--radius-md); margin-bottom: 20px; border: 1px solid var(--border); display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .extended-row { font-size: 13px; line-height: 1.6; color: var(--text-secondary); }
+    .extended-row strong { color: var(--cyan); margin-right: 5px; }
+    
+    .hero-plot { font-size: 14px; line-height: 1.8; color: var(--text-muted); margin-bottom: 25px; max-width: 900px; text-align: justify; }
 
-    .watch-next-container { margin: 0 30px 30px 30px; background: #111; border: 1px dashed var(--border); border-radius: 15px; padding: 20px; }
-
-    .controls-bar { margin: 0 30px 20px 30px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
-
+    /* ===================== QUALITY & PROGRESS PANELS ===================== */
+    .action-panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 15px 20px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+    .panel-title { font-size: 14px; font-weight: 700; color: var(--cyan); display: flex; align-items: center; gap: 8px;}
+    
+    /* ===================== CONTROLS & GRID ===================== */
+    .section-title { margin: 30px 30px 15px 30px; font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 10px; color: #fff; }
+    
+    .controls-bar { margin: 0 30px 25px 30px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; background: var(--bg-surface); padding: 15px; border-radius: var(--radius-md); border: 1px solid var(--border); }
     .filters-group { display: flex; gap: 8px; flex-wrap: wrap; }
+    .filter-btn { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-muted); padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 13px; font-weight: 500; }
+    .filter-btn:hover { background: var(--bg-hover); color: #fff; }
+    .filter-btn.active { background: var(--text-main); color: var(--bg-main); border-color: var(--text-main); }
+    
+    .form-control { background: var(--bg-main); color: #fff; border: 1px solid var(--border); padding: 8px 12px; border-radius: var(--radius-sm); outline: none; font-size: 13px; }
+    .form-control:focus { border-color: var(--cyan); }
 
-    .filter-btn { background: #1a1a1a; border: 1px solid var(--border); color: var(--text-muted); padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 13px; }
-    .filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .main-grid { margin: 0 30px; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
 
-    select.sort-select, select.form-control { background: #2b2b2b; color: #fff; border: 1px solid var(--border); padding: 8px 12px; border-radius: 8px; outline: none; }
-
-    .main-grid { margin: 0 30px; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 25px; }
-
-    .movie-card { background: var(--bg-surface); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); position: relative; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-    .movie-card.selected { border-color: var(--accent); box-shadow: 0 0 15px rgba(229, 9, 20, 0.4); }
-
-    .card-poster-wrapper { position: relative; width: 100%; height: 280px; background: #222; }
+    /* ===================== CARDS ===================== */
+    .movie-card { background: var(--bg-surface); border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border); position: relative; cursor: pointer; display: flex; flex-direction: column; }
+    .movie-card:hover { transform: scale(1.02); border-color: #555; z-index: 10; box-shadow: var(--shadow); }
+    .movie-card.selected { border-color: var(--accent); box-shadow: 0 0 20px rgba(229, 9, 20, 0.2); }
+    
+    .card-poster-wrapper { position: relative; width: 100%; aspect-ratio: 2/3; background: var(--bg-card); }
     .card-poster-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+    
+    .quality-badge-absolute { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.8); color: var(--cyan); padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 900; border: 1px solid rgba(0, 188, 212, 0.4); backdrop-filter: blur(4px); z-index: 2; }
+    
+    .card-info { padding: 15px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    .card-title { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 8px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .card-meta-line { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-left: 5px; }
 
-    .card-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px; opacity: 0; padding: 15px; text-align: center; }
-    .movie-card:hover .card-overlay { opacity: 1; }
-
-    .card-info { padding: 12px; }
-    .card-title { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 5px; }
-    .card-meta-line { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 5px; }
-    .card-progress { background: rgba(0, 188, 212, 0.15); border-radius: 6px; padding: 4px 8px; font-size: 11px; color: var(--cyan); font-weight: bold; text-align: center; margin-top: 5px; }
-
-    .ai-global-panel { margin: 40px 30px; background: linear-gradient(135deg, #111 0%, #1a1515 100%); border: 1px solid rgba(229, 9, 20, 0.2); border-radius: 20px; padding: 30px; }
-    .ai-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px; flex-wrap: wrap; gap: 15px; }
-    .ai-response { background: rgba(0,0,0,0.3); padding: 20px; border-radius: 12px; border: 1px solid var(--border); min-height: 100px; font-size: 15px; line-height: 1.8; white-space: pre-wrap; }
-
-    .modal-backdrop { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 300; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; }
+    /* ===================== MODALS ===================== */
+    .modal-backdrop { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(5px); z-index: 300; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; }
     .modal-backdrop.active { opacity: 1; pointer-events: auto; }
-
-    .modal-box { background: #1c1c1c; border: 1px solid var(--border); border-radius: 16px; width: 90%; max-width: 600px; max-height: 85vh; overflow-y: auto; box-shadow: var(--shadow); padding: 25px; }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-
+    .modal-box { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md); width: 95%; max-width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow); padding: 25px; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+    .modal-header h3 { font-size: 18px; color: #fff; }
     .form-group { margin-bottom: 15px; }
-    .form-group label { display: block; margin-bottom: 6px; font-size: 13px; color: var(--text-muted); }
-    .form-control { width: 100%; background: #2b2b2b; border: 1px solid var(--border); border-radius: 8px; padding: 10px; color: #fff; font-size: 14px; outline: none; }
+    .form-group label { display: block; margin-bottom: 8px; font-size: 13px; color: var(--text-secondary); font-weight: 600; }
+    
+    .stars-rating { display: flex; gap: 5px; font-size: 24px; cursor: pointer; color: #333; direction: ltr; }
+    .stars-rating span.active { color: var(--gold); text-shadow: 0 0 10px rgba(255,193,7,0.3); }
 
-    .form-row { display: flex; gap: 15px; }
-
-    .backup-section { margin: 20px 30px; display: flex; gap: 15px; }
-    .watch-next-badge { display: inline-block; background: rgba(0,188,212,0.15); color: var(--cyan); border-radius: 4px; padding: 2px 6px; font-size: 10px; font-weight: bold; margin-top: 3px; }
-
-    @media (max-width: 768px) {
+    /* ===================== RESPONSIVE ===================== */
+    @media (max-width: 900px) {
       .hero-content { flex-direction: column; align-items: center; }
+      .hero-poster { width: 180px; height: 270px; }
+      .hero-extended-info { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
       .controls-bar { flex-direction: column; align-items: stretch; }
-      header { justify-content: center; }
+      header { flex-direction: column; padding: 15px; }
       .search-container { width: 100%; }
+      .main-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; margin: 0 15px; }
     }
   </style>
 </head>
 <body>
 
   <header>
-    <div class="brand">🎬 CineTrack AI <span style="font-size:12px; background:#e50914; color:#fff; padding:2px 6px; border-radius:4px;">ULTIMATE PRO</span></div>
-
+    <div class="brand"><span class="brand-accent">Cine</span>Track <span class="brand-badge">ULTIMATE</span></div>
+    
     <div class="search-container">
       <div class="search-wrapper">
-        <input type="text" id="searchInput" placeholder="جستجوی فیلم یا سریال انگلیسی..." oninput="handleSearch(this.value)">
+        <input type="text" id="searchInput" placeholder="جستجوی آنلاین (OMDb/TMDB)..." oninput="handleOnlineSearch(this.value)">
         <button onclick="clearSearchInput()">✖</button>
       </div>
       <div id="searchDropdown" class="search-dropdown"></div>
     </div>
 
     <div class="nav-actions">
-      <button class="btn btn-secondary" onclick="openNotesModal()">📝 یادداشت‌های من</button>
-      <button class="btn btn-secondary" onclick="openSettingsModal()">⚙️ تنظیمات هوش مصنوعی و آرشیو</button>
+      <button class="btn btn-secondary" onclick="openModal('notesModal')" id="btnNotes">📝 یادداشت‌ها</button>
+      <button class="btn btn-secondary" onclick="openModal('settingsModal')" id="btnSettings">⚙️ تنظیمات</button>
     </div>
   </header>
 
-  <section class="section-title">🎯 پیشنهاد تماشای بعدی (Watch Next)</section>
-  <section class="watch-next-container" id="watchNextContainer">
-    <p style="color:var(--text-muted); font-size:14px;">در حال ارزیابی الگوها و استخراج اولویت تماشا...</p>
-  </section>
+  <section class="section-title" id="titleWatchNext">🎯 پیشنهاد تماشای بعدی</section>
+  <div id="watchNextContainer" style="margin: 0 30px;"></div>
 
   <section class="hero-section" id="heroSection"></section>
 
-  <section class="section-title">📊 داشبورد وضعیت و آمار پیشرفته کتابخانه</section>
-  <section class="dashboard-stats" id="dashboardStats"></section>
-
+  <section class="section-title" id="titleLibrary">📚 کتابخانه شما</section>
   <section class="controls-bar">
-    <div class="filters-group" id="filterContainer">
-      <button class="filter-btn active" onclick="setFilter('status', 'all')">همه</button>
-      <button class="filter-btn" onclick="setFilter('status', 'Watching')">⏳ در حال تماشا</button>
-      <button class="filter-btn" onclick="setFilter('status', 'Planned')">📅 برنامه‌ریزی شده</button>
-      <button class="filter-btn" onclick="setFilter('status', 'Completed')">✅ تمام شده</button>
-      <button class="filter-btn" onclick="setFilter('type', 'movie')">🎬 فیلم‌ها</button>
-      <button class="filter-btn" onclick="setFilter('type', 'series')">📺 سریال‌ها</button>
-      <button class="filter-btn" onclick="setFilter('special', 'highRated')">⭐ امتیاز IMDb 8+</button>
-      <button class="filter-btn" onclick="setFilter('special', 'personalTop')">🏆 محبوب‌ترین‌های من</button>
+    <div class="search-wrapper" style="width: 100%; max-width: 300px; margin-bottom: 10px;">
+      <input type="text" id="localSearchInput" placeholder="جستجو در کتابخانه محلی..." oninput="renderGrid()">
     </div>
-    <div style="display:flex; gap:10px; flex-wrap:wrap;">
-      <select class="sort-select" id="genreFilterSelect" onchange="handleGenreChange(this.value)">
+    <div class="filters-group" id="filterContainer">
+      <button class="filter-btn active" onclick="setFilter('status', 'all')" id="fltAll">همه</button>
+      <button class="filter-btn" onclick="setFilter('status', 'Watching')" id="fltWatching">⏳ در حال تماشا</button>
+      <button class="filter-btn" onclick="setFilter('status', 'Planned')" id="fltPlanned">📅 برنامه‌ریزی</button>
+      <button class="filter-btn" onclick="setFilter('status', 'Completed')" id="fltCompleted">✅ تمام شده</button>
+      <button class="filter-btn" onclick="setFilter('type', 'movie')" id="fltMovies">🎬 فیلم‌ها</button>
+      <button class="filter-btn" onclick="setFilter('type', 'series')" id="fltSeries">📺 سریال‌ها</button>
+    </div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px;">
+      <select class="form-control" id="genreFilterSelect" onchange="renderGrid()">
         <option value="all">فیلتر ژانر (همه)</option>
       </select>
-      <select class="sort-select" id="sortSelect" onchange="handleSortChange(this.value)">
+      <select class="form-control" id="qualityFilterSelect" onchange="renderGrid()">
+        <option value="all">فیلتر کیفیت (همه)</option>
+        <option value="4K HDR">4K HDR</option>
+        <option value="4K">4K</option>
+        <option value="REMUX">REMUX</option>
+        <option value="BluRay">BluRay</option>
+        <option value="WEB-DL">WEB-DL</option>
+        <option value="WEBRip">WEBRip</option>
+        <option value="HDRip">HDRip</option>
+        <option value="HDTS">HDTS</option>
+        <option value="TC">TC</option>
+        <option value="TS">TS</option>
+        <option value="CAM">CAM</option>
+      </select>
+      <select class="form-control" id="sortSelect" onchange="renderGrid()">
         <option value="dateAdded">تاریخ اضافه شدن (جدیدترین)</option>
         <option value="title">عنوان (الفبا)</option>
         <option value="imdb">امتیاز IMDb</option>
@@ -265,34 +215,11 @@
 
   <main class="main-grid" id="mainGrid"></main>
 
-  <section class="backup-section">
-    <button class="btn btn-secondary" onclick="exportLibrary()">📤 Export Library</button>
-    <button class="btn btn-secondary" onclick="document.getElementById('importFileInput').click()">📥 Import Library</button>
-    <input type="file" id="importFileInput" style="display:none;" accept=".json" onchange="importLibrary(event)">
-  </section>
-
-  <section class="ai-global-panel">
-    <div class="ai-header">
-      <div style="display:flex; align-items:center; gap:10px;">
-        <span style="font-size:24px;">🧠</span>
-        <div>
-          <h3 style="font-weight:800;">تحلیل هوشمند کل کتابخانه فیلم</h3>
-          <p style="font-size:12px; color:var(--text-muted);">تحلیل عادت‌ها، سلایق و پیشنهاد کارهای گمشده بعدی</p>
-        </div>
-      </div>
-      <div style="display:flex; gap:10px;">
-        <button class="btn btn-secondary" id="regenGlobalAiBtn" style="display:none;" onclick="generateGlobalAIAnalysis(true)">🔄 بازتولید تحلیل</button>
-        <button class="btn" onclick="generateGlobalAIAnalysis(false)">💡 آنالیز کل آرشیو</button>
-      </div>
-    </div>
-    <div class="ai-response" id="globalAiResponse">درخواست آنالیز کل آرشیو را صادر کنید تا موتور هوشمند بر اساس OpenRouter لیست شما را تحلیل کند...</div>
-  </section>
-
   <div class="modal-backdrop" id="addModal">
     <div class="modal-box">
       <div class="modal-header">
-        <h3 id="modalMetaTitle">اضافه کردن به آرشیو</h3>
-        <button class="btn btn-secondary" style="padding:5px 10px;" onclick="closeModal('addModal')">✖</button>
+        <h3 id="lblAddTitle">اضافه کردن به آرشیو</h3>
+        <button class="btn btn-secondary" style="padding:4px 8px;" onclick="closeModal('addModal')">✖</button>
       </div>
       <div id="addModalContent"></div>
     </div>
@@ -301,318 +228,215 @@
   <div class="modal-backdrop" id="progressModal">
     <div class="modal-box">
       <div class="modal-header">
-        <h3>⚙️ بروزرسانی وضعیت قسمت‌ها</h3>
-        <button class="btn btn-secondary" style="padding:5px 10px;" onclick="closeModal('progressModal')">✖</button>
+        <h3 id="lblProgressTitle">⚙️ بروزرسانی وضعیت</h3>
+        <button class="btn btn-secondary" style="padding:4px 8px;" onclick="closeModal('progressModal')">✖</button>
       </div>
       <div id="progressModalContent"></div>
-    </div>
-  </div>
-
-  <div class="modal-backdrop" id="notesModal">
-    <div class="modal-box">
-      <div class="modal-header">
-        <h3>📝 یادداشت‌های من</h3>
-        <button class="btn btn-secondary" style="padding:5px 10px;" onclick="closeModal('notesModal')">✖</button>
-      </div>
-      <div class="form-group">
-        <label>متن یادداشت‌ها، لیست فیلم‌های آینده یا برنامه‌ تماشا:</label>
-        <textarea id="generalNotesTextArea" class="form-control" style="min-height: 300px; resize: vertical;" oninput="saveGeneralNotes(this.value)"></textarea>
-      </div>
-      <p style="font-size:12px; color:var(--text-muted);">متن فوق همزمان با تایپ در سیستم ذخیره می‌شود.</p>
     </div>
   </div>
 
   <div class="modal-backdrop" id="settingsModal">
     <div class="modal-box">
       <div class="modal-header">
-        <h3>تنظیمات سیستم هوش مصنوعی و سورس آرشیو</h3>
-        <button class="btn btn-secondary" style="padding:5px 10px;" onclick="closeModal('settingsModal')">✖</button>
+        <h3 id="lblSettingsTitle">⚙️ تنظیمات سیستم</h3>
+        <button class="btn btn-secondary" style="padding:4px 8px;" onclick="closeModal('settingsModal')">✖</button>
       </div>
-
+      
       <div class="form-group">
-        <label>Language / زبان:</label>
+        <label id="lblLang">زبان / Language:</label>
         <select id="languageSelect" class="form-control">
-          <option value="fa">فارسی</option>
+          <option value="fa">فارسی (Persian)</option>
           <option value="en">English</option>
         </select>
       </div>
 
       <div class="form-group">
-        <label>OpenRouter API Key:</label>
-        <input type="password" id="openRouterKeyInput" class="form-control" placeholder="sk-or-v1-...">
+        <label>TMDB API Key (برای دیتای فارسی):</label>
+        <input type="text" id="tmdbKeyInput" class="form-control" placeholder="eyJh...">
+        <small style="color:var(--text-muted); font-size:11px;">با وارد کردن کلید TMDB، خلاصه داستان و ژانرها به زبان فارسی دریافت می‌شوند.</small>
       </div>
 
+      <div style="border-top: 1px solid var(--border); margin: 20px 0; padding-top: 20px; display: flex; gap: 10px;">
+        <button class="btn btn-secondary" style="flex:1;" onclick="exportLibrary()" id="btnExport">📤 خروجی بکاپ</button>
+        <button class="btn btn-secondary" style="flex:1;" onclick="document.getElementById('importFileInput').click()" id="btnImport">📥 ورود بکاپ</button>
+        <input type="file" id="importFileInput" style="display:none;" accept=".json" onchange="importLibrary(event)">
+      </div>
+
+      <button class="btn" style="width:100%;" onclick="saveSettings()" id="btnSaveSettings">ذخیره تنظیمات</button>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="notesModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="lblNotesTitle">📝 یادداشت‌های من</h3>
+        <button class="btn btn-secondary" style="padding:4px 8px;" onclick="closeModal('notesModal')">✖</button>
+      </div>
       <div class="form-group">
-        <label>انتخاب مدل پردازش هوش مصنوعی:</label>
-        <select id="aiModelSelect" class="form-control" onchange="toggleCustomModelField(this.value)">
-          <option value="deepseek/deepseek-chat">DeepSeek Chat</option>
-          <option value="qwen/qwen-turbo">Qwen</option>
-          <option value="google/gemma-2-9b-it">Gemma</option>
-          <option value="custom">مدل دلخواه کاربر...</option>
-        </select>
+        <textarea id="generalNotesTextArea" class="form-control" style="min-height: 300px; resize: vertical;" oninput="saveGeneralNotes(this.value)"></textarea>
       </div>
-
-      <div class="form-group" id="customModelGroup" style="display:none;">
-        <label>شناسه مدل سفارشی (مثال: meta-llama/llama-3-8b-instruct):</label>
-        <input type="text" id="customModelInput" class="form-control" placeholder="vendor/model-name">
-      </div>
-
-      <div style="border-top: 1px solid var(--border); margin: 20px 0 15px 0; padding-top: 15px;">
-        <p style="font-size: 14px; color: var(--cyan); margin-bottom: 12px; font-weight:bold;">📥 بارگذاری فایل متنی / سورس آرشیو</p>
-        <div class="form-group">
-          <label>فایل HTML دانلود شده از آرشیو را انتخاب کنید:</label>
-          <input type="file" id="archiveHtmlFileInput" class="form-control" accept=".html,.htm" onchange="handleArchiveHtmlUpload(event)">
-          <div id="archiveUploadStatus" style="font-size: 12px; color: #ffc107; margin-top: 8px; font-weight: bold;"></div>
-        </div>
-      </div>
-
-      <button class="btn" style="width:100%; margin-top:5px;" onclick="saveSettings()">ذخیره تنظیمات</button>
     </div>
   </div>
 
   <script>
-    // Professionalization patch v1:
-    // - Language selector foundation added
-    // - Light theme foundation added
-    // - Archive matching system intentionally untouched
-    // - Ready for future OpenRouter Persian plot translation integration
+    /* ===================== CONFIG & STATE ===================== */
     const OMDB_KEY = "4b0254f3";
-
+    const QUALITIES = ['نامشخص', 'CAM', 'TS', 'TC', 'HDTS', 'HDRip', 'WEBRip', 'WEB-DL', 'BluRay', 'REMUX', '4K', '4K HDR'];
+    
     let state = {
       items: JSON.parse(localStorage.getItem("cinetrack_ultimate_db") || "[]"),
       selectedId: null,
-      filters: { status: 'all', type: 'all', special: 'all', genre: 'all' },
-      sortBy: 'dateAdded',
-      globalAiCache: localStorage.getItem("cinetrack_global_ai_cache") || "",
-      archiveHtmlSource: localStorage.getItem("cinetrack_archive_html_raw") || "",
-      audioReviews: JSON.parse(localStorage.getItem("cinetrack_audio_reviews") || "{}"),
-      language: localStorage.getItem("cinetrack_language") || "fa"
+      filters: { status: 'all', type: 'all' },
+      language: localStorage.getItem("cinetrack_language") || "fa",
+      tmdbKey: localStorage.getItem("cinetrack_tmdb_key") || ""
     };
 
     let searchDebounceTimer;
-    let recognition = null;
-    let isRecordingVoice = false;
 
-    /* ===================== INIT ===================== */
+    /* ===================== I18N DICTIONARY ===================== */
+    const dict = {
+      fa: {
+        searchPlace: "جستجوی آنلاین (OMDb/TMDB)...", searchLocal: "جستجو در کتابخانه محلی...",
+        btnNotes: "📝 یادداشت‌ها", btnSettings: "⚙️ تنظیمات",
+        watchNext: "🎯 پیشنهاد تماشای بعدی", library: "📚 کتابخانه شما",
+        all: "همه", watching: "⏳ در حال تماشا", planned: "📅 برنامه‌ریزی", completed: "✅ تمام شده",
+        movies: "🎬 فیلم‌ها", series: "📺 سریال‌ها",
+        sortAdd: "تاریخ اضافه شدن (جدیدترین)", sortTitle: "عنوان (الفبا)", sortImdb: "امتیاز IMDb", sortYear: "سال ساخت", sortUser: "امتیاز من",
+        emptyHero: "یک فیلم یا سریال را از آرشیو انتخاب کنید.",
+        emptyGrid: "هیچ موردی یافت نشد.", emptyWatchNext: "موردی برای تماشای بعدی یافت نشد.",
+        plotEmpty: "خلاصه داستانی برای این اثر ثبت نشده است.",
+        genre: "ژانر", director: "کارگردان", actors: "بازیگران", country: "کشور", runtime: "زمان", quality: "کیفیت",
+        season: "فصل", episode: "قسمت", totalEp: "کل قسمت‌ها", totalSea: "کل فصل‌ها",
+        editStatus: "بروزرسانی وضعیت", save: "ذخیره تغییرات", delete: "حذف از آرشیو", personalRating: "امتیاز شما:",
+        lblAddTitle: "اضافه کردن به آرشیو", lblSettingsTitle: "⚙️ تنظیمات سیستم", btnExport: "📤 خروجی بکاپ", btnImport: "📥 ورود بکاپ",
+        statusWatching: "در حال تماشا", statusPlanned: "برنامه‌ریزی شده", statusCompleted: "تمام شده",
+        typeMovie: "فیلم سینمایی", typeSeries: "سریال تلویزیونی", unknown: "نامشخص",
+        nextEp: "قسمت بعدی", startWatch: "شروع تماشا"
+      },
+      en: {
+        searchPlace: "Search Online (OMDb/TMDB)...", searchLocal: "Search local library...",
+        btnNotes: "📝 Notes", btnSettings: "⚙️ Settings",
+        watchNext: "🎯 Watch Next", library: "📚 Your Library",
+        all: "All", watching: "⏳ Watching", planned: "📅 Planned", completed: "✅ Completed",
+        movies: "🎬 Movies", series: "📺 Series",
+        sortAdd: "Date Added (Newest)", sortTitle: "Title (A-Z)", sortImdb: "IMDb Rating", sortYear: "Release Year", sortUser: "My Rating",
+        emptyHero: "Select a movie or series from your library.",
+        emptyGrid: "No items found matching the criteria.", emptyWatchNext: "No items available to watch next.",
+        plotEmpty: "No plot summary available for this item.",
+        genre: "Genre", director: "Director", actors: "Actors", country: "Country", runtime: "Runtime", quality: "Quality",
+        season: "Season", episode: "Episode", totalEp: "Total Episodes", totalSea: "Total Seasons",
+        editStatus: "Update Status", save: "Save Changes", delete: "Delete from Library", personalRating: "Your Rating:",
+        lblAddTitle: "Add to Library", lblSettingsTitle: "⚙️ System Settings", btnExport: "📤 Export Backup", btnImport: "📥 Import Backup",
+        statusWatching: "Watching", statusPlanned: "Planned", statusCompleted: "Completed",
+        typeMovie: "Movie", typeSeries: "TV Series", unknown: "Unknown",
+        nextEp: "Next Episode", startWatch: "Start Watching"
+      }
+    };
+
+    function t(key) { return dict[state.language][key] || key; }
+
+    /* ===================== INIT & CORE ===================== */
     function init() {
-      renderDashboard();
-      extractAndRenderGenres();
-      renderGrid();
-      renderHero();
-      setupFilterButtonsUI();
-      renderWatchNext();
-      initSpeechRecognition();
-
-      document.getElementById("openRouterKeyInput").value = localStorage.getItem("cinetrack_or_key") || "";
+      applyLanguage();
+      document.getElementById("tmdbKeyInput").value = state.tmdbKey;
       document.getElementById("languageSelect").value = state.language;
-      
-      if (state.archiveHtmlSource) {
-        document.getElementById("archiveUploadStatus").innerText = "✅ فایل آرشیو با موفقیت بارگذاری شده و آماده پردازش هوشمند است.";
-      }
-
-      const savedModel = localStorage.getItem("cinetrack_or_model") || "deepseek/deepseek-chat";
-      if (['deepseek/deepseek-chat', 'qwen/qwen-turbo', 'google/gemma-2-9b-it'].includes(savedModel)) {
-        document.getElementById("aiModelSelect").value = savedModel;
-      } else if (savedModel) {
-        document.getElementById("aiModelSelect").value = "custom";
-        document.getElementById("customModelGroup").style.display = "block";
-        document.getElementById("customModelInput").value = savedModel;
-      }
-
       document.getElementById("generalNotesTextArea").value = localStorage.getItem("cinetrack_general_notes") || "";
-      if (state.globalAiCache) {
-        document.getElementById("globalAiResponse").innerHTML = state.globalAiCache;
-        document.getElementById("regenGlobalAiBtn").style.display = "inline-flex";
-      }
+      
+      // Data Migration (adding missing fields to old data)
+      state.items.forEach(item => {
+        if(!item.quality) item.quality = "نامشخص";
+        if(!item.totalEpisodes) item.totalEpisodes = "N/A";
+        if(!item.country) item.country = "N/A";
+      });
+      saveState();
+      
+      extractAndRenderGenres();
+      renderGrid();
+      renderHero();
+      renderWatchNext();
     }
 
-    function saveStateToStorage() {
+    function saveState() {
       localStorage.setItem("cinetrack_ultimate_db", JSON.stringify(state.items));
-      renderDashboard();
       extractAndRenderGenres();
       renderWatchNext();
     }
 
-    /* ===================== ARCHIVE MATCHING ENGINE ===================== */
-    function handleArchiveHtmlUpload(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const rawText = e.target.result;
-        state.archiveHtmlSource = rawText;
-        localStorage.setItem("cinetrack_archive_html_raw", rawText);
-        document.getElementById("archiveUploadStatus").innerText = "✅ فایل بارگذاری شد: " + file.name;
-        alert("سورس آرشیو ذخیره شد. اکنون فایل‌ها بر اساس شناسه و عنوان انگلیسی با بالاترین دقت استخراج می‌شوند.");
-        if(state.selectedId) renderHero();
-      };
-      reader.readAsText(file);
-    }
-
-    function findMatchInArchive(imdbID, title) {
-      if (!state.archiveHtmlSource) return null;
-
-      const cleanImdbId = imdbID ? imdbID.trim().toLowerCase() : '';
-      const cleanTitle = title ? title.trim().toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ' ') : '';
-      const titleWords = cleanTitle.split(' ').filter(w => w.length > 1);
-
-      const matchedLinks = [];
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(state.archiveHtmlSource, 'text/html');
-      const allLinks = doc.getElementsByTagName('a');
-
-      for (let link of allLinks) {
-        const hrefText = (link.getAttribute('href') || '').toLowerCase();
-        const innerText = (link.innerText || '').toLowerCase();
-
-        let isMatch = false;
-
-        if (cleanImdbId && (hrefText.includes(cleanImdbId) || innerText.includes(cleanImdbId))) {
-          isMatch = true;
-        } 
-        else if (cleanTitle && (hrefText.includes(cleanTitle) || innerText.includes(cleanTitle))) {
-          isMatch = true;
-        }
-        else if (titleWords.length > 0) {
-          const matchAllWords = titleWords.every(word => hrefText.includes(word) || innerText.includes(word));
-          if (matchAllWords) {
-            isMatch = true;
-          }
-        }
-
-        if (isMatch) {
-          if (!matchedLinks.some(l => l.url === link.getAttribute('href'))) {
-            matchedLinks.push({
-              text: link.innerText.trim() || "لینک استخراج شده مستقیم",
-              url: link.getAttribute('href')
-            });
-          }
-        }
-      }
-      return matchedLinks;
-    }
-
-    /* ===================== SPEECH RECOGNITION (VOICE TO TEXT) ===================== */
-    function initSpeechRecognition() {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (SpeechRecognition) {
-        recognition = new SpeechRecognition();
-        recognition.continuous = true;
-        recognition.interimResults = false;
-        recognition.lang = "fa-IR";
-
-        recognition.onresult = function(event) {
-          const resultIndex = event.resultIndex;
-          const transcript = event.results[resultIndex][0].transcript;
-          const textarea = document.getElementById("audioReviewTextarea");
-          if (textarea) {
-            textarea.value += (textarea.value ? " " : "") + transcript;
-          }
-        };
-
-        recognition.onstart = function() {
-          isRecordingVoice = true;
-          const btn = document.getElementById("voiceRecBtn");
-          if (btn) {
-            btn.innerHTML = "🔴 در حال ضبط صدا... (کلیک جهت توقف)";
-            btn.style.background = "#551111";
-          }
-        };
-
-        recognition.onend = function() {
-          isRecordingVoice = false;
-          const btn = document.getElementById("voiceRecBtn");
-          if (btn) {
-            btn.innerHTML = "🎙️ تایپ صوتی (وویس به تکست فارسی)";
-            btn.style.background = "#222";
-          }
-        };
-      }
-    }
-
-    function toggleVoiceInput() {
-      if (!recognition) {
-        alert("مرورگر شما از سیستم تشخیص گفتار پشتیبانی نمی‌کند. لطفاً از مرورگر Google Chrome استفاده کنید.");
-        return;
-      }
-      if (isRecordingVoice) {
-        recognition.stop();
-      } else {
-        recognition.start();
-      }
-    }
-
-    /* ===================== PERSONAL RATING & REVIEW RECOVERY ===================== */
-    function renderStarsInteractive(currentRating) {
-      let html = '<div class="stars-rating">';
-      for (let i = 1; i <= 10; i++) {
-        const activeClass = i <= currentRating ? 'active' : '';
-        html += `<span class="${activeClass}" onclick="setInteractiveRating(${i})">★</span>`;
-      }
-      html += '</div>';
-      return html;
-    }
-
-    function setInteractiveRating(rating) {
-      if (!state.selectedId) return;
-      const item = state.items.find(i => i.id === state.selectedId);
-      if (item) {
-        item.userRating = rating;
-        saveStateToStorage();
-        renderGrid();
-        renderHero();
-      }
-    }
-
-    function savePersonalReviewAndRating() {
-      if (!state.selectedId) return;
-      const item = state.items.find(i => i.id === state.selectedId);
-      if (!item) return;
-
-      const reviewText = document.getElementById("audioReviewTextarea").value;
-      item.personalReview = reviewText;
+    function applyLanguage() {
+      document.documentElement.lang = state.language;
+      document.documentElement.dir = state.language === 'fa' ? 'rtl' : 'ltr';
       
-      state.audioReviews[item.imdbID] = reviewText;
-      localStorage.setItem("cinetrack_audio_reviews", JSON.stringify(state.audioReviews));
+      document.getElementById("searchInput").placeholder = t('searchPlace');
+      document.getElementById("localSearchInput").placeholder = t('searchLocal');
+      document.getElementById("btnNotes").innerHTML = t('btnNotes');
+      document.getElementById("btnSettings").innerHTML = t('btnSettings');
+      document.getElementById("titleWatchNext").innerHTML = t('watchNext');
+      document.getElementById("titleLibrary").innerHTML = t('library');
+      
+      document.getElementById("fltAll").innerHTML = t('all');
+      document.getElementById("fltWatching").innerHTML = t('watching');
+      document.getElementById("fltPlanned").innerHTML = t('planned');
+      document.getElementById("fltCompleted").innerHTML = t('completed');
+      document.getElementById("fltMovies").innerHTML = t('movies');
+      document.getElementById("fltSeries").innerHTML = t('series');
 
-      saveStateToStorage();
-      alert("نظر شخصی و امتیاز شما با موفقیت ثبت و ذخیره دائم شد.");
-      renderGrid();
-      renderHero();
+      const sortSel = document.getElementById("sortSelect");
+      sortSel.options[0].text = t('sortAdd');
+      sortSel.options[1].text = t('sortTitle');
+      sortSel.options[2].text = t('sortImdb');
+      sortSel.options[3].text = t('sortYear');
+      sortSel.options[4].text = t('sortUser');
+
+      document.getElementById("lblAddTitle").innerHTML = t('lblAddTitle');
+      document.getElementById("lblSettingsTitle").innerHTML = t('lblSettingsTitle');
+      document.getElementById("btnExport").innerHTML = t('btnExport');
+      document.getElementById("btnImport").innerHTML = t('btnImport');
     }
 
-    /* ===================== OMDb ONLINE SEARCH ===================== */
-    function handleSearch(val) {
+    function extractAndRenderGenres() {
+      const select = document.getElementById("genreFilterSelect");
+      const currentSelected = select.value;
+      const allGenres = new Set();
+      state.items.forEach(item => {
+        if (item.genre && item.genre !== "N/A") {
+          item.genre.split(',').forEach(g => allGenres.add(g.trim()));
+        }
+      });
+      let html = `<option value="all">${t('genre')} (${t('all')})</option>`;
+      Array.from(allGenres).sort().forEach(g => {
+        html += `<option value="${g}" ${currentSelected === g ? 'selected' : ''}>${g}</option>`;
+      });
+      select.innerHTML = html;
+    }
+
+    /* ===================== API INTEGRATION (OMDb + TMDB) ===================== */
+    async function handleOnlineSearch(val) {
       clearTimeout(searchDebounceTimer);
       const dropdown = document.getElementById("searchDropdown");
-      if (!val || val.trim().length < 2) {
-        dropdown.style.display = "none";
-        return;
-      }
+      if (!val || val.trim().length < 2) { dropdown.style.display = "none"; return; }
 
-      searchDebounceTimer = setTimeout(() => {
-        fetch(`https://www.omdbapi.com/?s=${encodeURIComponent(val.trim())}&apikey=${OMDB_KEY}`)
-          .then(res => res.json())
-          .then(data => {
-            if (data.Response === "True" && data.Search) {
-              dropdown.innerHTML = data.Search.slice(0, 7).map(item => `
-                <div class="search-item" onclick="selectSearchItem('${item.imdbID}')">
-                  <img src="${item.Poster !== 'N/A' ? item.Poster : 'https://via.placeholder.com/150?text=No+Cover'}" alt="">
-                  <div class="info">
-                    <h4>${item.Title}</h4>
-                    <p>${item.Year} | ${translateType(item.Type)}</p>
-                  </div>
+      searchDebounceTimer = setTimeout(async () => {
+        try {
+          // Base search via OMDb
+          const res = await fetch(`https://www.omdbapi.com/?s=${encodeURIComponent(val.trim())}&apikey=${OMDB_KEY}`);
+          const data = await res.json();
+          if (data.Response === "True" && data.Search) {
+            dropdown.innerHTML = data.Search.slice(0, 8).map(item => `
+              <div class="search-item" onclick="fetchAndShowAddModal('${item.imdbID}')">
+                <img src="${item.Poster !== 'N/A' ? item.Poster : 'https://via.placeholder.com/150?text=No+Cover'}">
+                <div>
+                  <h4>${item.Title}</h4>
+                  <p>${item.Year} | ${item.Type === 'movie' ? t('typeMovie') : t('typeSeries')}</p>
                 </div>
-              `).join('');
-              dropdown.style.display = "block";
-            } else {
-              dropdown.innerHTML = `<div style="padding:15px; font-size:13px; color:var(--text-muted); text-align:center;">عنوانی در سرور آنلاین یافت نشد ❌</div>`;
-              dropdown.style.display = "block";
-            }
-          })
-          .catch(err => console.error(err));
-      }, 400);
+              </div>
+            `).join('');
+            dropdown.style.display = "block";
+          } else {
+            dropdown.innerHTML = `<div style="padding:15px; text-align:center; color:var(--text-muted);">${t('emptyGrid')}</div>`;
+            dropdown.style.display = "block";
+          }
+        } catch (err) { console.error(err); }
+      }, 500);
     }
 
     function clearSearchInput() {
@@ -620,669 +444,467 @@
       document.getElementById("searchDropdown").style.display = "none";
     }
 
-    function selectSearchItem(imdbID) {
-      document.getElementById("searchDropdown").style.display = "none";
-      
-      fetch(`https://www.omdbapi.com/?i=${imdbID}&apikey=${OMDB_KEY}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.Response === "False") return;
+    async function fetchAndShowAddModal(imdbID) {
+      clearSearchInput();
+      try {
+        // 1. Fetch from OMDb
+        const omdbRes = await fetch(`https://www.omdbapi.com/?i=${imdbID}&plot=full&apikey=${OMDB_KEY}`);
+        let omdbData = await omdbRes.json();
+        if (omdbData.Response === "False") return;
+
+        // 2. Try TMDB for Persian translation if language is FA and TMDB key exists
+        let tmdbData = null;
+        let finalPlot = omdbData.Plot;
+        let finalGenre = omdbData.Genre;
+        let backdrop = null;
+
+        if (state.language === 'fa' && state.tmdbKey) {
+          const tmdbSearch = await fetch(`https://api.themoviedb.org/3/find/${imdbID}?api_key=${state.tmdbKey}&external_source=imdb_id&language=fa-IR`);
+          const tmdbSearchData = await tmdbSearch.json();
           
-          const content = document.getElementById("addModalContent");
-          content.innerHTML = `
-            <div style="display:flex; gap:15px; margin-bottom:15px;">
-              <img src="${data.Poster !== 'N/A' ? data.Poster : 'https://via.placeholder.com/100x150?text=No+Cover'}" style="width:80px; height:120px; object-fit:cover; border-radius:6px;">
-              <div>
-                <h4 style="font-size:16px; font-weight:bold;">${data.Title}</h4>
-                <p style="color:var(--text-muted); font-size:13px;">${data.Year} | ${data.Genre}</p>
-                <p style="color:var(--cyan); font-size:13px; font-weight:bold;">IMDb: ⭐ ${data.imdbRating}</p>
-              </div>
-            </div>
-            <div class="form-group">
-              <label>وضعیت تماشا:</label>
-              <select id="addStatusSelect" class="form-control">
-                <option value="Watching">⏳ در حال تماشا</option>
-                <option value="Planned" selected>📅 برنامه‌ریزی شده برای آینده</option>
-                <option value="Completed">✅ تمام شده / تماشا شده</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>امتیاز شخصی اولیه (از ۱۰):</label>
-              <select id="addRatingSelect" class="form-control">
-                <option value="0">بدون امتیاز</option>
-                ${[1,2,3,4,5,6,7,8,9,10].map(n => `<option value="${n}">${n} ستاره</option>`).join('')}
-              </select>
-            </div>
-            <button class="btn" style="width:100%; margin-top:10px;" id="confirmAddBtn">➕ اضافه کردن به لیست آرشیو</button>
-          `;
-          
-          document.getElementById("confirmAddBtn").onclick = function() {
-            confirmAddItem(data);
-          };
-          
-          document.getElementById("addModal").classList.add("active");
-        });
+          let tmdbItem = null;
+          let tmdbType = 'movie';
+          if (tmdbSearchData.movie_results && tmdbSearchData.movie_results.length > 0) { tmdbItem = tmdbSearchData.movie_results[0]; }
+          else if (tmdbSearchData.tv_results && tmdbSearchData.tv_results.length > 0) { tmdbItem = tmdbSearchData.tv_results[0]; tmdbType = 'tv'; }
+
+          if (tmdbItem) {
+            // Fetch full details from TMDB
+            const tmdbDetailsRes = await fetch(`https://api.themoviedb.org/3/${tmdbType}/${tmdbItem.id}?api_key=${state.tmdbKey}&language=fa-IR`);
+            tmdbData = await tmdbDetailsRes.json();
+            
+            if (tmdbData.overview) finalPlot = tmdbData.overview;
+            if (tmdbData.genres && tmdbData.genres.length > 0) finalGenre = tmdbData.genres.map(g => g.name).join(', ');
+            if (tmdbData.backdrop_path) backdrop = `https://image.tmdb.org/t/p/w1280${tmdbData.backdrop_path}`;
+            if (tmdbType === 'tv' && tmdbData.number_of_episodes) omdbData.totalEpisodes = tmdbData.number_of_episodes;
+          }
+        }
+
+        const fullData = {
+          ...omdbData,
+          PlotTranslated: finalPlot,
+          GenreTranslated: finalGenre,
+          Backdrop: backdrop
+        };
+
+        showAddModal(fullData);
+      } catch(err) { console.error(err); }
     }
 
-    function confirmAddItem(omdbData) {
-      // TODO: future enhancement: fetch full OMDb details by imdbID so Plot, Director, Actors and Runtime are always populated.
-      if (state.items.some(i => i.imdbID === omdbData.imdbID)) {
-        alert("این عنوان قبلاً به آرشیو شما اضافه شده است!");
-        closeModal('addModal');
-        return;
+    function showAddModal(data) {
+      const content = document.getElementById("addModalContent");
+      
+      const qualityOptions = QUALITIES.map(q => `<option value="${q}">${q}</option>`).join('');
+      
+      content.innerHTML = `
+        <div style="display:flex; gap:15px; margin-bottom:20px; background:var(--bg-hover); padding:10px; border-radius:var(--radius-md);">
+          <img src="${data.Poster !== 'N/A' ? data.Poster : 'https://via.placeholder.com/100x150'}" style="width:70px; height:100px; object-fit:cover; border-radius:4px;">
+          <div>
+            <h4 style="font-size:16px; font-weight:700; color:#fff;">${data.Title}</h4>
+            <p style="color:var(--text-muted); font-size:12px; margin:4px 0;">${data.Year} | ${data.GenreTranslated}</p>
+            <span class="badge badge-imdb" style="font-size:11px;">IMDb: ⭐ ${data.imdbRating}</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>وضعیت / Status:</label>
+          <select id="addStatusSelect" class="form-control" style="width:100%;">
+            <option value="Planned" selected>${t('statusPlanned')}</option>
+            <option value="Watching">${t('statusWatching')}</option>
+            <option value="Completed">${t('statusCompleted')}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>کیفیت دانلود شده / Quality:</label>
+          <select id="addQualitySelect" class="form-control" style="width:100%;">
+            ${qualityOptions}
+          </select>
+        </div>
+        <button class="btn btn-success" style="width:100%; margin-top:10px; padding:12px;" id="confirmAddBtn">➕ ${t('lblAddTitle')}</button>
+      `;
+      
+      document.getElementById("confirmAddBtn").onclick = () => confirmAddItem(data);
+      openModal("addModal");
+    }
+
+    function confirmAddItem(apiData) {
+      if (state.items.some(i => i.imdbID === apiData.imdbID)) {
+        alert("Already in library! / از قبل در آرشیو موجود است!");
+        closeModal('addModal'); return;
       }
 
       const status = document.getElementById("addStatusSelect").value;
-      const rating = parseInt(document.getElementById("addRatingSelect").value);
+      const quality = document.getElementById("addQualitySelect").value;
 
       const newItem = {
         id: 'item_' + Date.now(),
-        imdbID: omdbData.imdbID,
-        title: omdbData.Title,
-        year: omdbData.Year,
-        poster: omdbData.Poster,
-        genre: omdbData.Genre,
-        type: omdbData.Type,
-        plot: omdbData.Plot || '',
-        imdbRating: omdbData.imdbRating || 'N/A',
-        director: omdbData.Director || 'N/A',
-        actors: omdbData.Actors || 'N/A',
-        runtime: omdbData.Runtime || 'N/A',
-        totalSeasons: omdbData.totalSeasons || 'N/A',
+        imdbID: apiData.imdbID,
+        title: apiData.Title,
+        year: apiData.Year,
+        poster: apiData.Poster,
+        backdrop: apiData.Backdrop || null,
+        genre: apiData.GenreTranslated || apiData.Genre,
+        type: apiData.Type,
+        plot: apiData.PlotTranslated || apiData.Plot || '',
+        imdbRating: apiData.imdbRating || 'N/A',
+        imdbVotes: apiData.imdbVotes || 'N/A',
+        director: apiData.Director || 'N/A',
+        actors: apiData.Actors || 'N/A',
+        country: apiData.Country || 'N/A',
+        runtime: apiData.Runtime || 'N/A',
+        totalSeasons: apiData.totalSeasons || 'N/A',
+        totalEpisodes: apiData.totalEpisodes || 'N/A',
+        quality: quality,
         status: status,
-        userRating: rating,
-        season: omdbData.Type === 'series' ? 1 : 0,
-        episode: omdbData.Type === 'series' ? 1 : 0,
-        personalReview: '',
+        userRating: 0,
+        season: apiData.Type === 'series' ? 1 : 0,
+        episode: apiData.Type === 'series' ? 1 : 0,
         dateAdded: new Date().toISOString()
       };
 
       state.items.push(newItem);
-      saveStateToStorage();
+      saveState();
       closeModal('addModal');
       state.selectedId = newItem.id;
       renderGrid();
       renderHero();
     }
 
-    /* ===================== DETAIL VIEW HERO SECTION ===================== */
-    function renderHero() {
-      const container = document.getElementById("heroSection");
-      if (!state.selectedId || state.items.length === 0) {
-        container.innerHTML = `
-          <div class="hero-empty">
-            <span style="font-size:48px;">🎬</span>
-            <p>یک فیلم یا سریال را از آرشیو انتخاب کنید تا پیوند‌های دانلود مستقیم، وضعیت قسمت‌ها و بخش نقد شخصی صوتی شما نمایان شود.</p>
-          </div>`;
-        return;
-      }
-
-      const item = state.items.find(i => i.id === state.selectedId);
-      if (!item) {
-        container.innerHTML = "";
-        return;
-      }
-
-      // بازیابی نقدهای همگام‌سازی شده صوتی قدیمی در صورت وجود
-      if (!item.personalReview && state.audioReviews[item.imdbID]) {
-        item.personalReview = state.audioReviews[item.imdbID];
-      }
-
-      // موتور هوشمند استخراج و تطبیق لینک‌ها بدون باگ اسکرول نامحدود افقی
-      const matchedLinks = findMatchInArchive(item.imdbID, item.title);
-      let archiveSectionHtml = "";
-
-      if (state.archiveHtmlSource) {
-        if (matchedLinks && matchedLinks.length > 0) {
-          archiveSectionHtml = `
-            <div class="extended-row" style="margin-top:10px;">
-              <strong>🔗 پیوند‌های یافته شده در آرشیو شما:</strong>
-              <div class="archive-links-box">
-                ${matchedLinks.map(link => `<a href="${link.url}" target="_blank" class="archive-link-btn" title="${link.text}">${link.text}</a>`).join('')}
-              </div>
-            </div>`;
-        } else {
-          archiveSectionHtml = `
-            <div class="extended-row" style="margin-top:10px; color:#ffc107;">
-              <strong>🔍 وضعیت آرشیو:</strong> هیچ فایل ویدیویی یا پوشه مطابق با کد یا نام انگلیسی این اثر در سورس آرشیو پیدا نشد.
-            </div>`;
-        }
-      } else {
-        archiveSectionHtml = `
-          <div class="extended-row" style="margin-top:10px; font-size:12px; color:var(--text-muted);">
-            💡 با بارگذاری فایل HTML دانلودر آرشیو خود در بخش تنظیمات، دکمه‌های دانلود مستقیم این اثر به طور خودکار اینجا فعال می‌شوند.
-          </div>`;
-      }
-
-      let progressHtml = "";
-      if (item.type === "series") {
-        progressHtml = `
-          <div class="episode-progress-block">
-            <div class="episode-progress-header">
-              <span class="episode-progress-title">⏳ وضعیت پیشرفت مشاهده سریال</span>
-              <span class="episode-progress-count">فصل ${item.season || 1} | قسمت ${item.episode || 1}</span>
-            </div>
-            <button class="btn btn-secondary" style="font-size:12px; padding:5px 12px;" onclick="openProgressModal('${item.id}')">⚙️ مدیریت و تغییر قسمت</button>
-          </div>
-        `;
-      }
-
-      container.innerHTML = `
-        <div class="hero-content">
-          <img class="hero-poster" src="${item.poster !== 'N/A' ? item.poster : 'https://via.placeholder.com/300x450?text=No+Cover'}" alt="">
-          <div class="hero-details">
-            <h1 class="hero-title">${item.title}</h1>
-            <div class="hero-meta">
-              <span class="badge badge-status">${translateStatus(item.status)}</span>
-              <span class="badge">${item.year}</span>
-              <span class="badge">${translateType(item.type)}</span>
-              <span class="badge" style="background:#ffc107; color:#000;">IMDb: ⭐ ${item.imdbRating}</span>
-              <span class="badge" style="background:var(--cyan); color:#000;">زمان: ${item.runtime}</span>
-            </div>
-
-            <div class="hero-extended-info">
-              <div class="extended-row"><strong>🎭 ژانرها:</strong> ${item.genre}</div>
-              <div class="extended-row"><strong>🎬 کارگردان:</strong> ${item.director}</div>
-              <div class="extended-row"><strong>👥 بازیگران برجسته:</strong> ${item.actors}</div>
-              ${archiveSectionHtml}
-            </div>
-
-            <p class="hero-plot">${item.plot || 'خلاصه داستانی برای این اثر ثبت نشده است.'}</p>
-            
-            ${progressHtml}
-
-            <div class="movie-mini-ai-box">
-              <div class="mini-ai-header">
-                <span style="font-size: 14px; font-weight: bold; color: var(--cyan);">🤖 پیشنهاد آثار مشابه تخصصی (AI)</span>
-                <button class="btn" style="font-size: 11px; padding: 4px 10px; background: var(--cyan); color: #000;" onclick="getSimilarMoviesAI('${item.id}')">✨ یافتن آثار مشابه</button>
-              </div>
-              <div class="mini-ai-result-content" id="miniAiResultBox_${item.id}">برای دریافت پیشنهادات مینیاتوری هم‌سبک با این اثر، روی دکمه کلیک کنید...</div>
-            </div>
-
-            <div class="audio-review-block">
-              <h3 style="font-size:15px; font-weight:800; margin-bottom:10px; color:#ffc107;">🏆 نقد شخصی، یادداشت‌ها و نمره‌دهی صوتی شما</h3>
-              <div style="display:flex; align-items:center; gap:15px; margin-bottom:15px; flex-wrap:wrap;">
-                <span style="font-size:13px; color:var(--text-muted);">امتیاز شما به اثر:</span>
-                ${renderStarsInteractive(item.userRating || 0)}
-                <span style="font-weight:bold; font-size:14px; color:#fff;">${item.userRating ? item.userRating + ' / 10' : 'بدون امتیاز'}</span>
-              </div>
-              
-              <div class="form-group">
-                <button class="btn" id="voiceRecBtn" style="background:#222; border:1px solid var(--border); font-size:12px; margin-bottom:8px;" onclick="toggleVoiceInput()">🎙️ تایپ صوتی (وویس به تکست فارسی)</button>
-                <textarea id="audioReviewTextarea" class="form-control" style="min-height:90px; font-size:13px;" placeholder="نظرات، نقدها، کیفیت پیشنهادی تصویر یا یادداشت شخصی‌تان را اینجا بنویسید یا دکمه وویس را بزنید و بگویید...">${item.personalReview || ''}</textarea>
-              </div>
-              <button class="btn btn-stream" style="font-size:13px;" onclick="savePersonalReviewAndRating()">💾 ثبت و ذخیره نهایی یادداشت و نمره</button>
-            </div>
-
-            <div style="margin-top:25px; display:flex; gap:10px; flex-wrap:wrap;">
-              <button class="btn btn-secondary btn-delete" onclick="deleteItem('${item.id}')">🗑️ حذف کامل از آرشیو</button>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    /* سیستم مینیاتوری اختصاصی هوش مصنوعی برای هر فیلم */
-    async function getSimilarMoviesAI(itemId) {
-      const apiKey = localStorage.getItem("cinetrack_or_key");
-      const model = localStorage.getItem("cinetrack_or_model") || "deepseek/deepseek-chat";
-      const item = state.items.find(i => i.id === itemId);
-
-      if (!apiKey) {
-        alert("لطفاً ابتدا کلید OpenRouter API خود را در بخش تنظیمات وارد کنید.");
-        return;
-      }
-      if (!item) return;
-
-      const resultBox = document.getElementById(`miniAiResultBox_${itemId}`);
-      resultBox.innerText = "⏳ در حال بررسی ساختار محتوایی اثر و دریافت آثار هم‌سبک پیشنهادی از هوش مصنوعی...";
-
-      const prompt = `شما یک دستیار سینمایی حرفه‌ای هستید. بر اساس مشخصات اثر زیر:
-نام اثر: ${item.title}
-ژانر: ${item.genre}
-سال ساخت: ${item.year}
-خلاصه: ${item.plot}
-
-لطفاً دقیقاً ۳ فیلم یا سریال بسیار مشابه، جذاب و هم‌سبک با این اثر معرفی کنید. برای هر اثر پیشنهادی، سال ساخت و یک خط توضیح بسیار کوتاه به زبان فارسی بنویسید که چرا این عنوان جذاب است. پاسخ را به صورت کاملاً مینیاتوری، خلاصه، مرتب و بدون مقدمه چینی اضافه ارسال کنید.`;
-
-      try {
-        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${apiKey}`,
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            model: model,
-            messages: [{ role: "user", content: prompt }]
-          })
-        });
-
-        const data = await response.json();
-        if (data.choices && data.choices[0]) {
-          resultBox.innerText = data.choices[0].message.content.trim();
-        } else {
-          resultBox.innerText = "خطا: پاسخ نامعتبر از سرور هوش مصنوعی دریافت شد.";
-        }
-      } catch (err) {
-        resultBox.innerText = "خطا در برقراری ارتباط با شبکه. اتصال اینترنت یا کلید API خود را بررسی کنید.";
-      }
-    }
-
-    /* ===================== AI GLOBAL ANALYZER ===================== */
-    async function generateGlobalAIAnalysis(forceRefresh) {
-      const apiKey = localStorage.getItem("cinetrack_or_key");
-      const model = localStorage.getItem("cinetrack_or_model") || "deepseek/deepseek-chat";
-      const responseBox = document.getElementById("globalAiResponse");
-
-      if (!apiKey) {
-        alert("لطفاً ابتدا کلید OpenRouter API خود را در تنظیمات وارد کنید.");
-        return;
-      }
-
-      if (state.items.length === 0) {
-        responseBox.innerHTML = "کتابخانه شما خالی است! عناوینی را جستجو و اضافه کنید تا تحلیل آغاز شود.";
-        return;
-      }
-
-      if (!forceRefresh && state.globalAiCache) {
-        responseBox.innerHTML = state.globalAiCache;
-        return;
-      }
-
-      responseBox.innerHTML = "⏳ موتور هوش مصنوعی در حال خواندن عمیق کل کتابخانه شما، الگوهای امتیازدهی و یادداشت‌های صوتی شماست. این کار ممکن است چند لحظه زمان ببرد...";
-
-      const summary = state.items.map(i => `- ${i.title} (${i.year}) [نوع: ${i.type}, ژانر: ${i.genre}, امتیاز شما: ${i.userRating || 'بدون امتیاز'}]`).join('\n');
-      
-      const prompt = `من یک آرشیو فیلم و سریال شخصی با مشخصات زیر دارم:\n${summary}\n\nبا توجه به این کتابخانه، تحلیل دقیقی از علایق سینمایی من، سبک‌های محبوبم و جهت‌گیری‌های انتخابی من ارائه بده. سلیقه من را نقد کن و در نهایت ۴ اثر فوق‌العاده شاهکار هماهنگ با علایقم که در این لیست نیستند را همراه با دلیل به زبان فارسی روان پیشنهاد بده تا تماشا کنم.`;
-
-      try {
-        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${apiKey}`,
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            model: model,
-            messages: [{ role: "user", content: prompt }]
-          })
-        });
-
-        const data = await response.json();
-        if (data.choices && data.choices[0]) {
-          const aiText = data.choices[0].message.content.trim();
-          state.globalAiCache = aiText;
-          localStorage.setItem("cinetrack_global_ai_cache", aiText);
-          responseBox.innerHTML = aiText;
-          document.getElementById("regenGlobalAiBtn").style.display = "inline-flex";
-        } else {
-          responseBox.innerHTML = "❌ خطا در پردازش پاسخ سرور هوش مصنوعی. لطفاً دوباره تلاش کنید.";
-        }
-      } catch (err) {
-        console.error(err);
-        responseBox.innerHTML = "❌ ارتباط با سرور برقرار نشد. کلید API یا وضعیت اینترنت را چک کنید.";
-      }
-    }
-
-    /* ===================== WATCH NEXT ALGORITHM ENGINE ===================== */
-    function renderWatchNext() {
-      const container = document.getElementById("watchNextContainer");
-      const watchingSeries = state.items.filter(i => i.status === "Watching" && i.type === "series");
-      const plannedItems = state.items.filter(i => i.status === "Planned");
-
-      if (watchingSeries.length === 0 && plannedItems.length === 0) {
-        container.innerHTML = `<p style="color:var(--text-muted); font-size:14px;">هیچ سریالی در حال تماشا یا عنوانی در لیست برنامه‌ریزی آینده نیست. مواردی را اضافه یا تغییر وضعیت دهید.</p>`;
-        return;
-      }
-
-      let html = `<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:15px;">`;
-
-      // اولویت ۱: سریال‌های در حال تماشا (ادامه قسمت قبل)
-      watchingSeries.slice(0, 2).forEach(s => {
-        html += `
-          <div style="background:#1a237e; border:1px solid rgba(255,255,255,0.1); padding:15px; border-radius:10px; display:flex; gap:15px; align-items:center;">
-            <img src="${s.poster}" style="width:50px; height:75px; object-fit:cover; border-radius:6px;">
-            <div style="flex:1;">
-              <h4 style="font-size:14px; font-weight:bold;">${s.title}</h4>
-              <span class="watch-next-badge" style="background:#e50914; color:#fff;">🔥 ادامه پخش سریع</span>
-              <p style="font-size:12px; color:#aaa; margin-top:4px;">قسمت بعدی پیشنهادی: فصل ${s.season} - قسمت ${parseInt(s.episode) + 1}</p>
-            </div>
-            <button class="btn btn-stream" style="padding:6px 12px; font-size:12px;" onclick="quickIncrementEpisode('${s.id}')">✅ دیدم</button>
-          </div>
-        `;
-      });
-
-      // اولویت ۲: آیتم‌های پلن شده با بالاترین نمره IMDb
-      const topPlanned = plannedItems
-        .filter(i => i.imdbRating !== 'N/A')
-        .sort((a, b) => parseFloat(b.imdbRating) - parseFloat(a.imdbRating))
-        .slice(0, 2);
-
-      topPlanned.forEach(p => {
-        html += `
-          <div style="background:#141414; border:1px dashed var(--cyan); padding:15px; border-radius:10px; display:flex; gap:15px; align-items:center;">
-            <img src="${p.poster}" style="width:50px; height:75px; object-fit:cover; border-radius:6px;">
-            <div style="flex:1;">
-              <h4 style="font-size:14px; font-weight:bold;">${p.title}</h4>
-              <span class="watch-next-badge">⭐ بالاترین پتانسیل (IMDb ${p.imdbRating})</span>
-              <p style="font-size:12px; color:#aaa; margin-top:4px;">ژانر: ${p.genre.split(',')[0]}</p>
-            </div>
-            <button class="btn btn-stream-next" style="padding:6px 12px; font-size:12px;" onclick="quickStartWatching('${p.id}')">⏳ شروع</button>
-          </div>
-        `;
-      });
-
-      html += `</div>`;
-      container.innerHTML = html;
-    }
-
-    function quickIncrementEpisode(id) {
-      const item = state.items.find(i => i.id === id);
-      if (item) {
-        item.episode = parseInt(item.episode || 1) + 1;
-        saveStateToStorage();
-        renderHero();
-        renderWatchNext();
-        renderGrid();
-      }
-    }
-
-    function quickStartWatching(id) {
-      const item = state.items.find(i => i.id === id);
-      if (item) {
-        item.status = "Watching";
-        saveStateToStorage();
-        state.selectedId = id;
-        renderHero();
-        renderWatchNext();
-        renderGrid();
-        setupFilterButtonsUI();
-      }
-    }
-
-    /* ===================== DASHBOARD STATS ===================== */
-    function renderDashboard() {
-      const total = state.items.length;
-      const watching = state.items.filter(i => i.status === "Watching").length;
-      const planned = state.items.filter(i => i.status === "Planned").length;
-      const completed = state.items.filter(i => i.status === "Completed").length;
-      
-      const moviesCount = state.items.filter(i => i.type === "movie").length;
-      const seriesCount = state.items.filter(i => i.type === "series").length;
-
-      const ratedItems = state.items.filter(i => i.userRating > 0);
-      const avgRating = ratedItems.length > 0 ? (ratedItems.reduce((acc, curr) => acc + curr.userRating, 0) / ratedItems.length).toFixed(1) : '0';
-
-      const stats = [
-        { title: total, desc: 'کل عناوین آرشیو' },
-        { title: watching, desc: '⏳ در حال تماشا' },
-        { title: planned, desc: '📅 برنامه‌ریزی آینده' },
-        { title: completed, desc: '✅ تماشا شده‌ها' },
-        { title: `${moviesCount} / ${seriesCount}`, desc: 'فیلم‌ها / سریال‌ها' },
-        { title: `⭐ ${avgRating}`, desc: 'میانگین نمرات شما' }
-      ];
-
-      document.getElementById("dashboardStats").innerHTML = stats.map(s => `
-        <div class="stat-card">
-          <h3>${s.title}</h3>
-          <p>${s.desc}</p>
-        </div>
-      `).join('');
-    }
-
-    /* ===================== GENRE AUTO EXTRACTOR ===================== */
-    function extractAndRenderGenres() {
-      const select = document.getElementById("genreFilterSelect");
-      const currentSelected = state.filters.genre;
-      
-      const allGenres = new Set();
-      state.items.forEach(item => {
-        if (item.genre) {
-          item.genre.split(',').forEach(g => allGenres.add(g.trim()));
-        }
-      });
-
-      let html = `<option value="all">فیلتر ژانر (همه)</option>`;
-      Array.from(allGenres).sort().forEach(g => {
-        html += `<option value="${g}" ${currentSelected === g ? 'selected' : ''}>${g}</option>`;
-      });
-      select.innerHTML = html;
-    }
-
-    /* ===================== GRID RENDERING ENGINE ===================== */
+    /* ===================== RENDERING ===================== */
     function renderGrid() {
       const grid = document.getElementById("mainGrid");
-      grid.innerHTML = "";
+      const localQuery = document.getElementById("localSearchInput").value.toLowerCase();
+      const qualityFilter = document.getElementById("qualityFilterSelect").value;
+      const genreFilter = document.getElementById("genreFilterSelect").value;
+      const sortBy = document.getElementById("sortSelect").value;
 
-      let filtered = [...state.items];
+      let filtered = state.items.filter(item => {
+        // Status & Type from state.filters
+        if (state.filters.status !== 'all' && item.status !== state.filters.status) return false;
+        if (state.filters.type !== 'all' && item.type !== state.filters.type) return false;
+        
+        // Quality & Genre from dropdowns
+        if (qualityFilter !== 'all' && item.quality !== qualityFilter) return false;
+        if (genreFilter !== 'all' && (!item.genre || !item.genre.includes(genreFilter))) return false;
 
-      if (state.filters.status !== 'all') filtered = filtered.filter(i => i.status === state.filters.status);
-      if (state.filters.type !== 'all') filtered = filtered.filter(i => i.type === state.filters.type);
-      if (state.filters.genre !== 'all') filtered = filtered.filter(i => i.genre && i.genre.includes(state.filters.genre));
-      
-      if (state.filters.special === 'highRated') filtered = filtered.filter(i => parseFloat(i.imdbRating) >= 8.0);
-      if (state.filters.special === 'personalTop') filtered = filtered.filter(i => i.userRating >= 9);
+        // Local Text Search
+        if (localQuery) {
+          const textToSearch = `${item.title} ${item.genre} ${item.year} ${item.quality} ${item.director}`.toLowerCase();
+          if (!textToSearch.includes(localQuery)) return false;
+        }
+        return true;
+      });
 
-      // مرتب سازی دینامیک
       filtered.sort((a, b) => {
-        if (state.sortBy === 'dateAdded') return new Date(b.dateAdded) - new Date(a.dateAdded);
-        if (state.sortBy === 'title') return a.title.localeCompare(b.title);
-        if (state.sortBy === 'imdb') return parseFloat(b.imdbRating || 0) - parseFloat(a.imdbRating || 0);
-        if (state.sortBy === 'year') return parseInt(b.year) - parseInt(a.year);
-        if (state.sortBy === 'userRating') return (b.userRating || 0) - (a.userRating || 0);
+        if (sortBy === 'dateAdded') return new Date(b.dateAdded) - new Date(a.dateAdded);
+        if (sortBy === 'title') return a.title.localeCompare(b.title);
+        if (sortBy === 'imdb') return parseFloat(b.imdbRating || 0) - parseFloat(a.imdbRating || 0);
+        if (sortBy === 'year') return parseInt(b.year) - parseInt(a.year);
+        if (sortBy === 'userRating') return (b.userRating || 0) - (a.userRating || 0);
       });
 
       if (filtered.length === 0) {
-        grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding:40px; color:var(--text-muted); font-size:14px;">هیچ موردی مطابق فیلترهای اعمال شده یافت نشد. 🚫</div>`;
+        grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:50px; color:var(--text-muted);">${t('emptyGrid')}</div>`;
         return;
       }
 
-      filtered.forEach(item => {
+      grid.innerHTML = filtered.map(item => {
         const isSelected = item.id === state.selectedId ? 'selected' : '';
-        let progressBadgeHtml = "";
-        if (item.type === 'series') {
-          progressBadgeHtml = `<div class="card-progress">فصل ${item.season || 1} | ق ${item.episode || 1}</div>`;
-        }
+        const statusColor = item.status === 'Watching' ? 'var(--cyan)' : item.status === 'Completed' ? 'var(--green)' : 'var(--gold)';
+        const progressStr = item.type === 'series' ? `<div style="font-size:11px; color:var(--cyan); margin-top:4px;">${t('season')} ${item.season} | ${t('episode')} ${item.episode}</div>` : '';
+        const qualityBadge = item.quality !== 'نامشخص' ? `<div class="quality-badge-absolute">${item.quality}</div>` : '';
 
-        const card = document.createElement("div");
-        card.className = `movie-card ${isSelected}`;
-        card.onclick = () => selectCard(item.id);
-
-        card.innerHTML = `
-          <div class="card-poster-wrapper">
-            <img src="${item.poster !== 'N/A' ? item.poster : 'https://via.placeholder.com/200x280?text=No+Poster'}" alt="">
-            <div class="card-overlay">
-              <p style="font-size:12px; font-weight:bold;">${item.genre.split(',').slice(0,2).join(', ')}</p>
-              <p style="font-size:11px; color:var(--text-muted);">کارگردان: ${item.director}</p>
-              <span class="badge" style="background:#ffc107; color:#000; margin-top:5px;">IMDb ${item.imdbRating}</span>
+        return `
+          <div class="movie-card ${isSelected}" onclick="selectCard('${item.id}')">
+            <div class="card-poster-wrapper">
+              ${qualityBadge}
+              <img src="${item.poster !== 'N/A' ? item.poster : 'https://via.placeholder.com/200x300?text=No+Cover'}">
             </div>
-          </div>
-          <div class="card-info">
-            <h4 class="card-title" title="${item.title}">${item.title}</h4>
-            <div class="card-meta-line">
-              <span>${item.year}</span>
-              <span style="color:${getStatusColor(item.status)}">${translateStatus(item.status)}</span>
+            <div class="card-info">
+              <h4 class="card-title">${item.title}</h4>
+              <div>
+                <div class="card-meta-line">
+                  <span>${item.year}</span>
+                  <span style="display:flex; align-items:center;">
+                    ${item.status === 'Watching' ? t('statusWatching') : item.status === 'Planned' ? t('statusPlanned') : t('statusCompleted')}
+                    <span class="status-dot" style="background:${statusColor}"></span>
+                  </span>
+                </div>
+                ${progressStr}
+                <div style="margin-top:8px; display:flex; justify-content:space-between; align-items:center;">
+                  <span class="badge badge-imdb" style="font-size:10px; padding:2px 4px;">⭐ ${item.imdbRating}</span>
+                  <span style="font-size:11px; color:var(--gold);">${item.userRating ? '★ '+item.userRating : ''}</span>
+                </div>
+              </div>
             </div>
-            <div class="card-meta-line" style="margin-top:2px; font-size:11px;">
-              <span>امتیاز شما:</span>
-              <span style="color:#ffc107; font-weight:bold;">${item.userRating ? '★ ' + item.userRating : 'نمره‌نداده'}</span>
-            </div>
-            ${progressBadgeHtml}
           </div>
         `;
-        grid.appendChild(card);
-      });
+      }).join('');
     }
 
     function selectCard(id) {
       state.selectedId = id;
-      document.querySelectorAll(".movie-card").forEach(c => c.classList.remove("selected"));
       renderGrid();
       renderHero();
-      window.scrollTo({ top: 400, behavior: 'smooth' });
+      document.getElementById('heroSection').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function renderHero() {
+      const container = document.getElementById("heroSection");
+      const item = state.items.find(i => i.id === state.selectedId);
+
+      if (!item) {
+        container.innerHTML = `<div class="hero-empty"><span style="font-size:48px;">🍿</span><p>${t('emptyHero')}</p></div>`;
+        return;
+      }
+
+      // Backdrop handling
+      if (item.backdrop) {
+        container.style.backgroundImage = `linear-gradient(to right, rgba(20,20,20,1) 30%, rgba(20,20,20,0.6)), url('${item.backdrop}')`;
+        container.style.backgroundSize = 'cover';
+        container.style.backgroundPosition = 'center';
+      } else {
+        container.style.background = 'var(--bg-surface)';
+      }
+
+      let seriesProgressPanel = "";
+      if (item.type === "series") {
+        seriesProgressPanel = `
+          <div class="action-panel">
+            <div class="panel-title">📺 ${t('editStatus')}</div>
+            <div style="display:flex; gap:15px; align-items:center; flex-wrap:wrap;">
+              <span style="font-size:13px; color:var(--text-secondary);">${t('season')} <b style="color:#fff;">${item.season}</b> | ${t('episode')} <b style="color:#fff;">${item.episode}</b></span>
+              <button class="btn btn-secondary" style="padding:6px 12px; font-size:12px;" onclick="openProgressModal('${item.id}')">⚙️ تغییر دستی</button>
+              <button class="btn btn-success" style="padding:6px 12px; font-size:12px;" onclick="incrementEpisode('${item.id}')">➕ ${t('nextEp')}</button>
+            </div>
+          </div>
+        `;
+      }
+
+      const qualityOptions = QUALITIES.map(q => `<option value="${q}" ${item.quality === q ? 'selected' : ''}>${q}</option>`).join('');
+
+      container.innerHTML = `
+        <div class="hero-content">
+          <img class="hero-poster" src="${item.poster !== 'N/A' ? item.poster : 'https://via.placeholder.com/300x450'}" alt="">
+          <div class="hero-details">
+            <h1 class="hero-title">${item.title}</h1>
+            <div class="hero-meta">
+              <span class="badge badge-accent">${item.status === 'Watching' ? t('statusWatching') : item.status === 'Planned' ? t('statusPlanned') : t('statusCompleted')}</span>
+              <span class="badge">${item.year}</span>
+              <span class="badge">${item.type === 'movie' ? t('typeMovie') : t('typeSeries')}</span>
+              <span class="badge badge-quality">${item.quality || t('unknown')}</span>
+              <span class="badge badge-imdb">IMDb: ⭐ ${item.imdbRating} (${item.imdbVotes || ''} votes)</span>
+            </div>
+
+            <div class="hero-extended-info">
+              <div class="extended-row"><strong>${t('genre')}:</strong> ${item.genre}</div>
+              <div class="extended-row"><strong>${t('runtime')}:</strong> ${item.runtime}</div>
+              <div class="extended-row"><strong>${t('director')}:</strong> ${item.director}</div>
+              <div class="extended-row"><strong>${t('country')}:</strong> ${item.country}</div>
+              <div class="extended-row" style="grid-column: 1/-1;"><strong>${t('actors')}:</strong> ${item.actors}</div>
+            </div>
+
+            <p class="hero-plot">${item.plot || t('plotEmpty')}</p>
+            
+            ${seriesProgressPanel}
+
+            <div class="action-panel">
+              <div style="display:flex; flex-direction:column; gap:10px; width:100%;">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                  <span style="font-size:13px;">${t('personalRating')}</span>
+                  ${renderStars(item.userRating || 0)}
+                </div>
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                  <select id="editQualityHero" class="form-control" style="flex:1; min-width:150px;" onchange="updateItemQuality('${item.id}', this.value)">
+                    <option value="" disabled>تغییر کیفیت</option>
+                    ${qualityOptions}
+                  </select>
+                  <select id="editStatusHero" class="form-control" style="flex:1; min-width:150px;" onchange="updateItemStatus('${item.id}', this.value)">
+                    <option value="Planned" ${item.status === 'Planned' ? 'selected' : ''}>${t('statusPlanned')}</option>
+                    <option value="Watching" ${item.status === 'Watching' ? 'selected' : ''}>${t('statusWatching')}</option>
+                    <option value="Completed" ${item.status === 'Completed' ? 'selected' : ''}>${t('statusCompleted')}</option>
+                  </select>
+                  <button class="btn btn-danger" onclick="deleteItem('${item.id}')">🗑️ ${t('delete')}</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      `;
+    }
+
+    function renderWatchNext() {
+      const container = document.getElementById("watchNextContainer");
+      const watchingSeries = state.items.filter(i => i.status === "Watching" && i.type === "series");
+      const plannedItems = state.items.filter(i => i.status === "Planned").sort((a,b) => parseFloat(b.imdbRating||0) - parseFloat(a.imdbRating||0));
+      
+      if (watchingSeries.length === 0 && plannedItems.length === 0) {
+        container.innerHTML = `<p style="color:var(--text-muted); font-size:13px; text-align:center;">${t('emptyWatchNext')}</p>`;
+        return;
+      }
+
+      let html = `<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:15px; margin-bottom: 20px;">`;
+      
+      watchingSeries.slice(0, 2).forEach(s => {
+        html += `
+          <div style="background:var(--bg-card); border:1px solid var(--border); padding:15px; border-radius:var(--radius-md); display:flex; gap:15px; align-items:center;">
+            <img src="${s.poster}" style="width:60px; height:90px; object-fit:cover; border-radius:4px;">
+            <div style="flex:1;">
+              <h4 style="font-size:14px; font-weight:700; color:#fff; margin-bottom:5px;">${s.title}</h4>
+              <span class="badge badge-accent" style="font-size:10px;">🔥 ${t('watching')}</span>
+              <p style="font-size:12px; color:var(--text-muted); margin-top:8px;">${t('season')} ${s.season} - ${t('episode')} ${parseInt(s.episode) + 1} پیشنهادی</p>
+            </div>
+            <button class="btn btn-success" style="padding:8px 12px; font-size:12px;" onclick="incrementEpisode('${s.id}')">➕</button>
+          </div>
+        `;
+      });
+
+      plannedItems.slice(0, 2).forEach(p => {
+        html += `
+          <div style="background:var(--bg-card); border:1px dashed var(--cyan); padding:15px; border-radius:var(--radius-md); display:flex; gap:15px; align-items:center;">
+            <img src="${p.poster}" style="width:60px; height:90px; object-fit:cover; border-radius:4px;">
+            <div style="flex:1;">
+              <h4 style="font-size:14px; font-weight:700; color:#fff; margin-bottom:5px;">${p.title}</h4>
+              <span class="badge badge-imdb" style="font-size:10px;">⭐ IMDb ${p.imdbRating}</span>
+              <p style="font-size:12px; color:var(--text-muted); margin-top:8px;">${p.genre.split(',')[0]}</p>
+            </div>
+            <button class="btn btn-secondary" style="padding:8px 12px; font-size:12px;" onclick="quickStart('${p.id}')">▶ ${t('startWatch')}</button>
+          </div>
+        `;
+      });
+      html += `</div>`;
+      container.innerHTML = html;
+    }
+
+    /* ===================== INTERACTIONS & UPDATES ===================== */
+    function setFilter(key, value) {
+      if (key === 'status') { state.filters.status = value; state.filters.type = 'all'; } 
+      else if (key === 'type') { state.filters.type = value; state.filters.status = 'all'; }
+      
+      document.querySelectorAll("#filterContainer .filter-btn").forEach(b => b.classList.remove("active"));
+      event.target.classList.add("active");
+      renderGrid();
+    }
+
+    function renderStars(currentRating) {
+      let html = '<div class="stars-rating">';
+      for (let i = 1; i <= 10; i++) {
+        html += `<span class="${i <= currentRating ? 'active' : ''}" onclick="setRating(${i})">★</span>`;
+      }
+      html += '</div>';
+      return html;
+    }
+
+    function setRating(rating) {
+      const item = state.items.find(i => i.id === state.selectedId);
+      if (item) { item.userRating = rating; saveState(); renderHero(); renderGrid(); }
+    }
+
+    function updateItemQuality(id, newQuality) {
+      const item = state.items.find(i => i.id === id);
+      if(item) { item.quality = newQuality; saveState(); renderGrid(); renderHero(); }
+    }
+
+    function updateItemStatus(id, newStatus) {
+      const item = state.items.find(i => i.id === id);
+      if(item) { item.status = newStatus; saveState(); renderGrid(); renderHero(); renderWatchNext(); }
     }
 
     function deleteItem(id) {
-      if (confirm("آیا از حذف کامل این اثر از آرشیو اطمینان دارید؟")) {
+      if (confirm("Are you sure? / مطمئن هستید؟")) {
         state.items = state.items.filter(i => i.id !== id);
         if (state.selectedId === id) state.selectedId = null;
-        saveStateToStorage();
-        init();
+        saveState(); renderGrid(); renderHero(); renderWatchNext();
       }
     }
 
-    /* ===================== SERIE EPISODES PROGRESS MODAL ===================== */
+    function quickStart(id) {
+      updateItemStatus(id, 'Watching');
+      selectCard(id);
+    }
+
+    function incrementEpisode(id) {
+      const item = state.items.find(i => i.id === id);
+      if (item) {
+        item.episode = parseInt(item.episode || 1) + 1;
+        saveState(); renderHero(); renderGrid(); renderWatchNext();
+      }
+    }
+
     function openProgressModal(id) {
       const item = state.items.find(i => i.id === id);
       if (!item) return;
-
       const content = document.getElementById("progressModalContent");
       content.innerHTML = `
-        <div class="form-row">
+        <div style="display:flex; gap:15px; margin-bottom:15px;">
           <div class="form-group" style="flex:1;">
-            <label>فصل کنونی:</label>
-            <input type="number" id="modalSeasonInput" class="form-control" value="${item.season || 1}" min="1">
+            <label>${t('season')}:</label>
+            <input type="number" id="modalSeason" class="form-control" value="${item.season || 1}" min="1">
           </div>
           <div class="form-group" style="flex:1;">
-            <label>قسمت کنونی:</label>
-            <input type="number" id="modalEpisodeInput" class="form-control" value="${item.episode || 1}" min="1">
+            <label>${t('episode')}:</label>
+            <input type="number" id="modalEpisode" class="form-control" value="${item.episode || 1}" min="1">
           </div>
         </div>
-        <p style="font-size:12px; color:var(--text-muted); margin-bottom:15px;">مجموع فصل‌های این اثر بر اساس اعلام دیتابیس آنلاین: ${item.totalSeasons || 'نامشخص'}</p>
-        <button class="btn" style="width:100%;" onclick="saveProgress('${item.id}')">💾 اعمال و ذخیره‌سازی تغییرات</button>
+        <p style="font-size:12px; color:var(--text-muted); margin-bottom:20px;">
+          ${t('totalSea')}: ${item.totalSeasons || 'N/A'} | ${t('totalEp')}: ${item.totalEpisodes || 'N/A'}
+        </p>
+        <button class="btn btn-success" style="width:100%;" onclick="saveProgress('${item.id}')">💾 ${t('save')}</button>
       `;
-      document.getElementById("progressModal").classList.add("active");
+      openModal("progressModal");
     }
 
     function saveProgress(id) {
       const item = state.items.find(i => i.id === id);
       if (item) {
-        item.season = parseInt(document.getElementById("modalSeasonInput").value) || 1;
-        item.episode = parseInt(document.getElementById("modalEpisodeInput").value) || 1;
-        saveStateToStorage();
-        closeModal("progressModal");
-        renderHero();
-        renderGrid();
-        renderWatchNext();
+        item.season = parseInt(document.getElementById("modalSeason").value) || 1;
+        item.episode = parseInt(document.getElementById("modalEpisode").value) || 1;
+        saveState(); closeModal("progressModal"); renderHero(); renderGrid(); renderWatchNext();
       }
     }
 
-    /* ===================== BACKUP & DATA INTERACTION ===================== */
+    /* ===================== UTILS & SETTINGS ===================== */
+    function openModal(id) { document.getElementById(id).classList.add("active"); }
+    function closeModal(id) { document.getElementById(id).classList.remove("active"); }
+
+    function saveGeneralNotes(val) { localStorage.setItem("cinetrack_general_notes", val); }
+
+    function saveSettings() {
+      state.language = document.getElementById("languageSelect").value;
+      state.tmdbKey = document.getElementById("tmdbKeyInput").value.trim();
+      localStorage.setItem("cinetrack_language", state.language);
+      localStorage.setItem("cinetrack_tmdb_key", state.tmdbKey);
+      
+      applyLanguage();
+      extractAndRenderGenres();
+      renderGrid();
+      if(state.selectedId) renderHero();
+      closeModal('settingsModal');
+    }
+
     function exportLibrary() {
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state.items, null, 2));
-      const downloadAnchor = document.createElement('a');
-      downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `cinetrack_library_backup_${Date.now()}.json`);
-      document.body.appendChild(downloadAnchor);
-      downloadAnchor.click();
-      downloadAnchor.remove();
+      const dl = document.createElement('a');
+      dl.setAttribute("href", dataStr);
+      dl.setAttribute("download", `cinetrack_backup_${new Date().getTime()}.json`);
+      document.body.appendChild(dl); dl.click(); dl.remove();
     }
 
     function importLibrary(event) {
       const file = event.target.files[0];
       if (!file) return;
-
       const reader = new FileReader();
       reader.onload = function(e) {
         try {
           const parsed = JSON.parse(e.target.result);
           if (Array.isArray(parsed)) {
-            state.items = parsed;
-            saveStateToStorage();
-            init();
-            alert(`بارگذاری موفقیت‌آمیز بود. ${parsed.length} عنوان اضافه شد.`);
-          } else { alert("فرمت فایل بکاپ نامعتبر است."); }
-        } catch (err) { alert("خطا در خواندن فایل بکاپ."); }
+            state.items = parsed; saveState(); init();
+            alert("Backup imported successfully. / بکاپ با موفقیت وارد شد.");
+            closeModal('settingsModal');
+          }
+        } catch (err) { alert("Invalid backup file. / فایل بکاپ نامعتبر است."); }
       };
       reader.readAsText(file);
     }
-
-    /* ===================== CONTROLS & CONTROLLERS ===================== */
-    function setFilter(key, value) {
-      if (key === 'status') {
-        state.filters.status = value;
-        state.filters.type = 'all';
-        state.filters.special = 'all';
-      } else if (key === 'type') {
-        state.filters.type = value;
-        state.filters.status = 'all';
-        state.filters.special = 'all';
-      } else if (key === 'special') {
-        state.filters.special = value;
-        state.filters.status = 'all';
-        state.filters.type = 'all';
-      }
-      setupFilterButtonsUI();
-      renderGrid();
-    }
-
-    function handleGenreChange(val) {
-      state.filters.genre = val;
-      renderGrid();
-    }
-
-    function handleSortChange(val) {
-      state.sortBy = val;
-      renderGrid();
-    }
-
-    function setupFilterButtonsUI() {
-      const buttons = document.querySelectorAll("#filterContainer .filter-btn");
-      buttons.forEach(b => b.classList.remove("active"));
-
-      // تطبیق با دکمه فعال
-      if (state.filters.status !== 'all') {
-        const map = { 'Watching': 1, 'Planned': 2, 'Completed': 3 };
-        if(buttons[map[state.filters.status]]) buttons[map[state.filters.status]].classList.add("active");
-      } else if (state.filters.type !== 'all') {
-        const map = { 'movie': 4, 'series': 5 };
-        if(buttons[map[state.filters.type]]) buttons[map[state.filters.type]].classList.add("active");
-      } else if (state.filters.special !== 'all') {
-        const map = { 'highRated': 6, 'personalTop': 7 };
-        if(buttons[map[state.filters.special]]) buttons[map[state.filters.special]].classList.add("active");
-      } else {
-        buttons[0].classList.add("active");
-      }
-    }
-
-    /* ===================== TRANSLATORS & HELPERS ===================== */
-    function translateStatus(s) {
-      const map = { 'Watching': '⏳ در حال تماشا', 'Planned': '📅 برنامه‌ریزی شده', 'Completed': '✅ تمام شده' };
-      return map[s] || s;
-    }
-    function translateType(t) {
-      return t === 'movie' ? '🎬 فیلم سینمایی' : '📺 سریال تلویزیونی';
-    }
-    function getStatusColor(s) {
-      const map = { 'Watching': '#00bcd4', 'Planned': '#ffc107', 'Completed': '#2e7d32' };
-      return map[s] || '#fff';
-    }
-
-    /* ===================== MODALS & SETTINGS ===================== */
-    function openNotesModal() { document.getElementById("notesModal").classList.add("active"); }
-    function saveGeneralNotes(val) { localStorage.setItem("cinetrack_general_notes", val); }
-    function openSettingsModal() { document.getElementById("settingsModal").classList.add("active"); }
-    function toggleCustomModelField(val) { document.getElementById("customModelGroup").style.display = (val === "custom") ? "block" : "none"; }
-
-    function saveSettings() {
-      const key = document.getElementById("openRouterKeyInput").value;
-      const selectVal = document.getElementById("aiModelSelect").value;
-      let finalModel = selectVal;
-      if (selectVal === "custom") finalModel = document.getElementById("customModelInput").value.trim();
-
-      localStorage.setItem("cinetrack_or_key", key);
-      localStorage.setItem("cinetrack_or_model", finalModel);
-      state.language = document.getElementById("languageSelect").value;
-      localStorage.setItem("cinetrack_language", state.language);
-      
-      alert("تنظیمات با موفقیت ذخیره شد.");
-      closeModal('settingsModal');
-      renderHero();
-      renderWatchNext();
-    }
-
-    function closeModal(id) { document.getElementById(id).classList.remove("active"); }
 
     window.onload = init;
   </script>
