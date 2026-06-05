@@ -305,14 +305,6 @@
         <input type="text" id="customModelInput" class="form-control" placeholder="vendor/model-name">
       </div>
 
-      <div class="form-group" style="margin-top: 15px; background: rgba(0,188,212,0.05); padding: 12px; border-radius: 8px; border: 1px dashed var(--cyan);">
-        <label style="color: var(--cyan); font-weight: bold;">🌐 زبان نمایش خلاصه داستان فیلم/سریال (Plot Language):</label>
-        <select id="plotLanguageSelect" class="form-control" style="margin-top: 5px;">
-          <option value="en">English (انگلیسی اصلی)</option>
-          <option value="fa">Persian / Farsi (ترجمه هوشمند فارسی)</option>
-        </select>
-      </div>
-
       <div style="border-top: 1px solid var(--border); margin: 20px 0 15px 0; padding-top: 15px;">
         <p style="font-size: 14px; color: var(--cyan); margin-bottom: 12px; font-weight:bold;">📥 بارگذاری فایل متنی / سورس آرشیو</p>
         <div class="form-group">
@@ -337,8 +329,7 @@
       omdbCache: JSON.parse(localStorage.getItem("cinetrack_omdb_cache") || "{}"),
       globalAiCache: localStorage.getItem("cinetrack_global_ai_cache") || "",
       archiveHtmlSource: localStorage.getItem("cinetrack_archive_html_raw") || "",
-      audioReviews: JSON.parse(localStorage.getItem("cinetrack_audio_reviews") || "{}"),
-      plotLanguage: localStorage.getItem("cinetrack_plot_lang") || "en" // ذخیره حالت زبان در ساختار استیت
+      audioReviews: JSON.parse(localStorage.getItem("cinetrack_audio_reviews") || "{}")
     };
 
     let searchDebounceTimer;
@@ -356,7 +347,6 @@
       initSpeechRecognition();
 
       document.getElementById("openRouterKeyInput").value = localStorage.getItem("cinetrack_or_key") || "";
-      document.getElementById("plotLanguageSelect").value = state.plotLanguage;
       
       if (state.archiveHtmlSource) {
         document.getElementById("archiveUploadStatus").innerText = "✅ فایل آرشیو با موفقیت بارگذاری شده و آماده پردازش شناسه IMDb است.";
@@ -385,7 +375,7 @@
       renderWatchNext();
     }
 
-    /* ===================== ARCHIVE MATCHING ENGINE (FIXED & HIGHLY POWERFUL) ===================== */
+    /* ===================== ARCHIVE MATCHING ENGINE (FIXED FOR LOST) ===================== */
     function handleArchiveHtmlUpload(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -396,58 +386,22 @@
         state.archiveHtmlSource = rawText;
         localStorage.setItem("cinetrack_archive_html_raw", rawText);
         document.getElementById("archiveUploadStatus").innerText = "✅ فایل بارگذاری شد: " + file.name;
-        alert("سورس آرشیو ذخیره شد. اکنون کدهای IMDb و نام عناوین به طور دقیق تطبیق داده می‌شوند.");
+        alert("سورس آرشیو ذخیره شد. اکنون کدهای IMDb به طور دقیق تطبیق داده می‌شوند.");
         if(state.selectedId) renderHero();
       };
       reader.readAsText(file);
     }
 
-    function findMatchInArchive(item) {
-      if (!state.archiveHtmlSource || !item) {
+    function findMatchInArchive(imdbID) {
+      if (!state.archiveHtmlSource) {
         alert("لطفاً ابتدا فایل HTML آرشیو خود را در بخش تنظیمات آپلود کنید.");
         return null;
       }
 
-      const imdbID = item.id.trim().toLowerCase(); // مثال: tt3032476
-      const numericId = imdbID.replace('tt', ''); // بخش عددی: 3032476
-      const titleClean = item.title.trim().toLowerCase().replace(/[^a-z0-9\s]/g, ''); // پاکسازی علائم خاص نام
-      const titleWords = titleClean.split(/\s+/).filter(w => w.length > 1);
-
-      // الگوهای مختلف ترکیب نام برای پوشش دهی حالت های لینک‌دهی آرشیوها (مانند نقطه یا خط تیره)
-      const titleWithDots = titleClean.replace(/\s+/g, '.');
-      const titleWithDashes = titleClean.replace(/\s+/g, '-');
-      const titleWithUnderscores = titleClean.replace(/\s+/g, '_');
-
+      const cleanImdbId = imdbID.trim().toLowerCase();
       const matchedLinks = [];
-      const uniqueUrls = new Set();
 
-      // تابع داخلی برای ارزیابی چندلایه تطبیق لینک
-      function isTargetMatch(href, text) {
-        const hLower = href.toLowerCase();
-        const tLower = text.toLowerCase();
-
-        // لایه ۱: تطبیق کامل کد رسمی IMDb
-        if (hLower.includes(imdbID) || tLower.includes(imdbID)) return true;
-        
-        // لایه ۲: تطبیق کد عددی مستقل IMDb (به شرط بزرگ بودن شناسه برای عدم خطا)
-        if (numericId.length > 4 && (hLower.includes(numericId) || tLower.includes(numericId))) return true;
-
-        // لایه ۳: تطبیق رشته‌های اسمی تمیز شده
-        if (hLower.includes(titleWithDots) || tLower.includes(titleWithDots)) return true;
-        if (hLower.includes(titleWithDashes) || tLower.includes(titleWithDashes)) return true;
-        if (hLower.includes(titleWithUnderscores) || tLower.includes(titleWithUnderscores)) return true;
-        if (hLower.includes(titleClean) || tLower.includes(titleClean)) return true;
-
-        // لایه ۴: بررسی حضور تمام کلمات کلیدی عنوان در ساختار لینک (پوشش فایل‌های با نام پیچیده)
-        if (titleWords.length >= 2) {
-          const matchAllInHref = titleWords.every(word => hLower.includes(word));
-          const matchAllInText = titleWords.every(word => tLower.includes(word));
-          if (matchAllInHref || matchAllInText) return true;
-        }
-
-        return false;
-      }
-
+      // ایجاد لایه امنیتی قدرتمند DOMParser
       const parser = new DOMParser();
       const doc = parser.parseFromString(state.archiveHtmlSource, 'text/html');
       const allLinks = doc.getElementsByTagName('a');
@@ -456,18 +410,16 @@
         const hrefText = link.getAttribute('href') || '';
         const innerText = link.innerText || '';
 
-        if (isTargetMatch(hrefText, innerText)) {
-          if (!uniqueUrls.has(hrefText)) {
-            uniqueUrls.add(hrefText);
-            matchedLinks.push({
-              text: link.innerText.trim() || "لینک مستقیم استخراج شده از آرشیو",
-              url: hrefText
-            });
-          }
+        // تطبیق با امنیت بسیار بالا: نادیده گرفتن حروف کوچک و بزرگ و متصل بودن شناسه (حل باگ سریال LOST)
+        if (hrefText.toLowerCase().includes(cleanImdbId) || innerText.toLowerCase().includes(cleanImdbId)) {
+          matchedLinks.push({
+            text: link.innerText.trim() || "لینک دانلود مستقیم از آرشیو",
+            url: hrefText
+          });
         }
       }
 
-      // لایه جایگزین پشتیبان: استفاده از رگکس در صورت عدم پردازش تگ خاص توسط مرورگر
+      // لایه دوم پشتیبان: اگر DOMParser به هر دلیلی تگ متفاوتی داشت، از Regex روی کل سورس متنی استفاده کن
       if (matchedLinks.length === 0) {
         try {
           const regexPattern = new RegExp(`<a[^>]*href=["']([^"']*)["'][^>]*>([\s\S]*?)<\/a>`, 'gi');
@@ -475,105 +427,47 @@
           while ((match = regexPattern.exec(state.archiveHtmlSource)) !== null) {
             const url = match[1];
             const anchorText = match[2].replace(/<[^>]*>/g, ''); 
-            if (isTargetMatch(url, anchorText)) {
-              if (!uniqueUrls.has(url)) {
-                uniqueUrls.add(url);
-                matchedLinks.push({
-                  text: anchorText.trim() || "لینک مستقیم استخراج شده (پشتیبان)",
-                  url: url
-                });
-              }
+            if (url.toLowerCase().includes(cleanImdbId) || anchorText.toLowerCase().includes(cleanImdbId)) {
+              matchedLinks.push({
+                text: anchorText.trim() || "لینک مستقیم استخراج شده",
+                url: url
+              });
             }
           }
-        } catch(e) { console.error("Regex engine error:", e); }
+        } catch(e) { console.error("Regex backup processing failed:", e); }
       }
 
       return matchedLinks;
     }
 
     function matchAndExtractLinks(imdbID) {
-      const item = state.items.find(i => i.id === imdbID);
-      if (!item) return;
-
-      const matches = findMatchInArchive(item);
+      const matches = findMatchInArchive(imdbID);
       const resultsDiv = document.getElementById("archiveMatchResults");
       if (!resultsDiv) return;
 
       if (!matches || matches.length === 0) {
         resultsDiv.innerHTML = `
           <div style="background:rgba(229,9,20,0.1); border:1px solid var(--accent); padding:15px; border-radius:10px; font-size:14px;">
-            ⚠️ عنوان مورد نظر (${item.title}) با کد شناسایی IMDb (${imdbID}) در سورس فایل آرشیو پیدا نشد. مطمئن شوید نام عنوان یا کد آن در فایل دریافتی شما ثبت شده است.
+            ⚠️ کد شناسایی IMDb (${imdbID}) در سورس فایل آرشیو شما پیدا نشد. مطمئن شوید که این عنوان در آرشیو دانلودی شما موجود است.
           </div>`;
         return;
       }
 
       let htmlRows = `<div style="background:rgba(46,125,50,0.1); border:1px solid var(--green); padding:15px; border-radius:10px; margin-bottom:15px;">
-        <p style="font-weight:bold; color:var(--green); margin-bottom:10px;">🎉 تطبیق موفقیت‌آمیز هوشمند (بر اساس شناسه و ساختار نام)! لینک‌های کشف شده:</p>`;
+        <p style="font-weight:bold; color:var(--green); margin-bottom:10px;">🎉 تطبیق موفقیت‌آمیز بر اساس شناسه منحصربه‌فرد IMDb! لینک‌های کشف شده:</p>`;
       
-      matches.forEach((matchedItem) => {
+      matches.forEach((item) => {
         htmlRows += `
           <div style="display:flex; justify-content:space-between; align-items:center; background:#222; padding:10px; border-radius:6px; margin-bottom:5px; gap:10px;">
-            <span style="font-size:13px; font-family:monospace; color:#ddd; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; direction:ltr; text-align:right;">${matchedItem.text}</span>
+            <span style="font-size:13px; font-family:monospace; color:#ddd; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; direction:ltr; text-align:right;">${item.text}</span>
             <div style="display:flex; gap:5px;">
-              <a href="${matchedItem.url}" target="_blank" class="btn btn-stream" style="padding:4px 10px; font-size:12px; border-radius:4px;">📥 دانلود مستقیم</a>
-              <button class="btn btn-secondary" style="padding:4px 10px; font-size:12px; border-radius:4px;" onclick="navigator.clipboard.writeText('${matchedItem.url}'); alert('لینک کپی شد!');">📋 کپی لینک</button>
+              <a href="${item.url}" target="_blank" class="btn btn-stream" style="padding:4px 10px; font-size:12px; border-radius:4px;">📥 دانلود مستقیم</a>
+              <button class="btn btn-secondary" style="padding:4px 10px; font-size:12px; border-radius:4px;" onclick="navigator.clipboard.writeText('${item.url}'); alert('لینک کپی شد!');">📋 کپی لینک</button>
             </div>
           </div>`;
       });
       htmlRows += `</div>`;
       resultsDiv.innerHTML = htmlRows;
-    }
-
-    /* ===================== INLINE SMART TRANSLATION FOR PLOT ===================== */
-    async function translatePlotInline(id) {
-      const item = state.items.find(i => i.id === id);
-      if (!item) return;
-
-      const key = localStorage.getItem("cinetrack_or_key");
-      const model = localStorage.getItem("cinetrack_or_model") || "deepseek/deepseek-chat";
-      const btn = document.getElementById(`translateBtn_${id}`);
-
-      if (!key) {
-        alert("لطفاً ابتدا کلید OpenRouter API Key را در بخش تنظیمات وارد کنید تا عملیات ترجمه فعال شود.");
-        openSettingsModal();
-        return;
-      }
-
-      if (btn) {
-        btn.disabled = true;
-        btn.innerText = "⏳ در حال ترجمه هوشمند توسط هوش مصنوعی...";
-      }
-
-      try {
-        const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${key}`,
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            model: model,
-            messages: [
-              { role: "system", content: "You are a professional cinematographer and translator. Translate the movie/series plot description into fluent, cinematic, and natural Persian (Farsi). Output ONLY the final translated text without any conversational filler or introductions." },
-              { role: "user", content: item.plot }
-            ]
-          })
-        });
-
-        const result = await res.json();
-        if (result.choices && result.choices[0]) {
-          const faText = result.choices[0].message.content.trim();
-          item.plotFa = faText; // ذخیره دائمی ترجمه فارسی خلاصه داستان
-          saveStateToStorage();
-          renderHero();
-        } else {
-          alert("خطا در دریافت پاسخ معتبر از سرور OpenRouter.");
-          if(btn) { btn.disabled = false; btn.innerText = "✨ تلاش مجدد ترجمه"; }
-        }
-      } catch (err) {
-        alert("خطا در اتصال به موتور پردازش هوشمند برای ترجمه.");
-        if(btn) { btn.disabled = false; btn.innerText = "✨ تلاش مجدد ترجمه"; }
-      }
     }
 
     /* ===================== SPEECH RECOGNITION SYSTEM ===================== */
@@ -800,16 +694,6 @@
       const progressPercent = getProgressPercent(item);
       const savedReview = state.audioReviews[item.id] || "";
 
-      // مدیریت پویای زبان خلاصه داستان فیلم بر اساس تنظیمات انتخابی کاربر
-      let plotToDisplay = item.plot || 'توضیحات داستانی برای این مورد یافت نشد.';
-      if (state.plotLanguage === 'fa') {
-        if (item.plotFa) {
-          plotToDisplay = item.plotFa;
-        } else {
-          plotToDisplay = `${item.plot || 'No description available.'}<br><button id="translateBtn_${item.id}" class="btn btn-secondary" style="margin-top:10px; font-size:12px; padding:4px 12px; background:rgba(0,188,212,0.15); border:1px solid var(--cyan); color:#fff;" onclick="translatePlotInline('${item.id}')">✨ ترجمه هوشمند داستان به فارسی</button>`;
-        }
-      }
-
       container.innerHTML = `
         <div class="hero-content">
           <img src="${item.poster !== 'N/A' ? item.poster : 'https://via.placeholder.com/200x300?text=No+Cover'}" class="hero-poster">
@@ -832,7 +716,7 @@
               <div class="extended-row"><strong>🏆 جوایز و نامزدی‌ها:</strong> ${item.awards || 'بدون مورد ثبت شده'}</div>
             </div>
 
-            <p class="hero-plot">${plotToDisplay}</p>
+            <p class="hero-plot">${item.plot || 'توضیحات داستانی برای این مورد یافت نشد.'}</p>
             
             ${isSeries ? `
               <div class="episode-progress-block">
@@ -848,6 +732,8 @@
 
             <div id="archiveMatchResults" style="margin-top:15px; margin-bottom:15px;"></div>
 
+            <div id="aiSimilarRecommendations" style="margin-top:15px; margin-bottom:15px; background: rgba(0, 188, 212, 0.04); border: 1px dashed rgba(0, 188, 212, 0.25); padding: 15px; border-radius: 12px; display: none;"></div>
+
             <div class="audio-review-block">
               <div class="audio-controls">
                 <h4 style="font-size:14px; font-weight:bold; color:var(--cyan);">🎙️ نقد و بررسی صوتی / متنی شما</h4>
@@ -859,6 +745,10 @@
             <div class="hero-actions" style="margin-top:20px;">
               <button class="btn btn-stream" onclick="matchAndExtractLinks('${item.id}')">
                 🔍 استخراج لینک‌های دانلود فایل از سورس آرشیو
+              </button>
+
+              <button class="btn btn-stream-next" onclick="generateSimilarRecommendations('${item.id}')">
+                🤖 پیشنهاد عناوین مشابه با هوش مصنوعی
               </button>
               
               ${isSeries ? `
@@ -877,7 +767,7 @@
       `;
     }
 
-    /* ===================== ADVANCED STATS SYSTEM ===================== */
+    /* ===================== ADVANCED STATS SYSTEM (IMDB AVG, MY AVG, FAVORITE GENRE) ===================== */
     function renderDashboard() {
       const container = document.getElementById("dashboardStats");
       if (!container) return;
@@ -886,6 +776,7 @@
       const watching = state.items.filter(i => i.status === "Watching").length;
       const completed = state.items.filter(i => i.status === "Completed").length;
 
+      // ۱. محاسبه میانگین امتیاز IMDb کل کتابخانه فیلم و سریال
       let totalImdb = 0;
       let imdbCount = 0;
       state.items.forEach(i => {
@@ -894,6 +785,7 @@
       });
       const imdbAvg = imdbCount > 0 ? (totalImdb / imdbCount).toFixed(1) : "0.0";
 
+      // ۲. محاسبه میانگین امتیاز شخصی ثبت شده شما
       let totalUserRating = 0;
       let userRatingCount = 0;
       state.items.forEach(i => {
@@ -901,6 +793,7 @@
       });
       const userAvg = userRatingCount > 0 ? (totalUserRating / userRatingCount).toFixed(1) : "0.0";
 
+      // ۳. استخراج ژانر محبوب بر اساس فراوانی تکرار در کل لیست آرشیو شما
       let genreFreq = {};
       state.items.forEach(i => {
         if(i.genre && i.genre !== "N/A") {
@@ -1121,7 +1014,6 @@
         episode: isSeries ? episode : null,
         totalSeasons: isSeries ? rawCached.totalSeasons : null,
         seasonData: seasonData,
-        plotFa: existingIdx > -1 ? (state.items[existingIdx].plotFa || null) : null, // بقای اطلاعات ترجمه در بروزرسانی‌ها
         dateAdded: existingIdx > -1 ? state.items[existingIdx].dateAdded : new Date().toISOString(),
         lastUpdated: new Date().toISOString()
       };
@@ -1333,6 +1225,65 @@
       `;
     }
 
+    /* ===================== CONTEXTUAL SIMILAR TITLES ENGINE ===================== */
+    async function generateSimilarRecommendations(id) {
+      const item = state.items.find(i => i.id === id);
+      if (!item) return;
+
+      const key = localStorage.getItem("cinetrack_or_key");
+      const model = localStorage.getItem("cinetrack_or_model") || "deepseek/deepseek-chat";
+
+      if (!key) {
+        alert("لطفاً ابتدا کلید OpenRouter API Key را در تنظیمات وارد کنید.");
+        openSettingsModal();
+        return;
+      }
+
+      const responseBox = document.getElementById("aiSimilarRecommendations");
+      if (!responseBox) return;
+
+      responseBox.style.display = "block";
+      responseBox.innerHTML = `
+        <div style="color:var(--cyan); font-size:14px; display:flex; align-items:center; gap:8px;">
+          <span>⏳</span> موتور هوش مصنوعی در حال تحلیل متادیتا و استخراج جذاب‌ترین عناوین مشابه برای «${item.title}» است...
+        </div>`;
+
+      const systemPrompt = `You are CineTrack AI Assistant, an expert film critic and recommendation engine. Recommend 5 movies or TV shows closely similar to the user's selected title. For each recommendation, provide the title, release year, a brief reason for recommendation, and a match score percentage. Speak directly to the user in Persian with elegant HTML styling tags (e.g. wrapper divs, highlighted colors like #00bcd4). Do not use any markdown code blocks like \`\`\`html in your response. Ensure the layout matches a premium dark movie tracker theme.`;
+      const userPrompt = `I love this title: "${item.title}" (${item.year || 'N/A'}). Type: ${item.type}. Genre: ${item.genre || 'N/A'}. Plot: ${item.plot || 'N/A'}. Please recommend 5 highly matching similar titles.`;
+
+      try {
+        const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${key}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            model: model,
+            messages: [
+              { role: "system", content: systemPrompt },
+              { role: "user", content: userPrompt }
+            ]
+          })
+        });
+
+        const result = await res.json();
+        if (result.choices && result.choices[0]) {
+          const aiText = result.choices[0].message.content;
+          responseBox.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:8px;">
+              <h4 style="font-size:14px; font-weight:bold; color:var(--cyan); display:flex; align-items:center; gap:6px;">🤖 پیشنهادهای مشابه اختصاصی هوش مصنوعی</h4>
+              <button class="btn btn-secondary" style="padding:2px 8px; font-size:11px; border-radius:4px;" onclick="document.getElementById('aiSimilarRecommendations').style.display='none'">✖ بستن</button>
+            </div>
+            <div style="font-size:14px; line-height:1.8; color:#ddd; white-space:pre-wrap;">${aiText}</div>`;
+        } else {
+          responseBox.innerHTML = `<span style="color:var(--accent);">خطا در دریافت پاسخ معتبر از سرور OpenRouter.</span>`;
+        }
+      } catch (err) {
+        responseBox.innerHTML = `<span style="color:var(--accent);">بروز خطا در برقراری ارتباط با سرویس هوش مصنوعی.</span>`;
+      }
+    }
+
     /* ===================== ADVANCED GLOBAL AI REASONING ===================== */
     async function generateGlobalAIAnalysis(forceRegen = false) {
       if (!forceRegen && state.globalAiCache) return;
@@ -1436,17 +1387,12 @@
     function saveSettings() {
       const key = document.getElementById("openRouterKeyInput").value;
       const selectVal = document.getElementById("aiModelSelect").value;
-      const plotLang = document.getElementById("plotLanguageSelect").value;
-
       let finalModel = selectVal;
       if (selectVal === "custom") finalModel = document.getElementById("customModelInput").value.trim();
 
       localStorage.setItem("cinetrack_or_key", key);
       localStorage.setItem("cinetrack_or_model", finalModel);
-      localStorage.setItem("cinetrack_plot_lang", plotLang); // ذخیره دائمی زبان انتخابی داستان
       
-      state.plotLanguage = plotLang;
-
       alert("تنظیمات با موفقیت ذخیره شد.");
       closeModal('settingsModal');
       renderHero();
