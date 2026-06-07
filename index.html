@@ -593,12 +593,6 @@
         <h3 style="font-size:18px; font-weight:800;">تنظیمات سیستم</h3>
         <button class="btn btn-secondary" style="padding:4px 10px;" onclick="closeModal('settingsModal')">✖</button>
       </div>
-      
-      <div class="form-group">
-        <label>مدل هوش مصنوعی (AI API Model):</label>
-        <input type="text" id="aiModelInput" class="form-control" placeholder="مثلاً: llama-3.3-70b-versatile">
-      </div>
-
       <div class="form-group">
         <label>زبان پیش‌فرض نمایش داستان:</label>
         <select id="uiLanguageSetting" class="form-control">
@@ -667,9 +661,9 @@
   <script>
     // ==================== API CONFIGURATION ====================
     const OMDB_KEY    = "4b0254f3";
-    const AI_API_BASE = "https://api.groq.com/openai/v1"; 
+    const AI_API_BASE = "https://api.groq.com/openai/v1"; // Fixed to official Groq API Endpoint
     const AI_API_KEY  = "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";
-    let AI_MODEL      = localStorage.getItem("cinetrack_ai_model") || "llama-3.3-70b-versatile";
+    const AI_MODEL    = "llama-3.1-8b-instant"; // Fixed to a valid, fast, free Groq model
 
     // ==================== IndexedDB ====================
     const DB_NAME    = 'CineTrackDB';
@@ -786,7 +780,9 @@
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${key}`
+          "Authorization": `Bearer ${key}`,
+          "HTTP-Referer": location.href,
+          "X-Title": "CineTrack AI"
         },
         body: JSON.stringify({ model: AI_MODEL, messages, temperature, max_tokens: 1500 })
       });
@@ -1734,32 +1730,18 @@
     function saveGeneralNotes(v) { localStorage.setItem("cinetrack_general_notes", v); }
     function openSettingsModal() {
       document.getElementById("settingsModal").classList.add("active");
-      
-      const savedModel = localStorage.getItem("cinetrack_ai_model") || "llama-3.3-70b-versatile";
-      const modelInput = document.getElementById("aiModelInput");
-      if (modelInput) modelInput.value = savedModel;
-
       const savedUrl = localStorage.getItem("cinetrack_backup_archive_url") || "";
       const urlInput = document.getElementById("backupArchiveUrlInput");
       if (urlInput) urlInput.value = savedUrl;
     }
 
     function saveSettings() {
-      const modelInput = document.getElementById("aiModelInput");
-      if (modelInput) {
-        const newModel = modelInput.value.trim() || "llama-3.3-70b-versatile";
-        AI_MODEL = newModel;
-        localStorage.setItem("cinetrack_ai_model", newModel);
-      }
-
       const lang     = document.getElementById("uiLanguageSetting").value;
       state.uiLanguage = lang;
       localStorage.setItem("cinetrack_ui_lang", lang);
-
       const backupUrl = document.getElementById("backupArchiveUrlInput").value.trim();
       if (backupUrl) localStorage.setItem("cinetrack_backup_archive_url", backupUrl);
       else localStorage.removeItem("cinetrack_backup_archive_url");
-      
       showToast("✅ تنظیمات ذخیره شد.", 'success');
       closeModal('settingsModal');
       renderHero();
